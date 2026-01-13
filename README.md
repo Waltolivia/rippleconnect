@@ -21,7 +21,7 @@ Writers and note takers often use many tools when creating. Some use paper to wr
 
 ### Design
 
-![Design image](IMG_5596.HEIC)
+![Design image](/assests/images/IMG_5596.HEIC)
 
 I want to have three main pages. A Home page for introductions and sign in, a Notes page for main toics and file organization, and a Connections pageofr the visual connections and studying purposes. I want to have a tab at the top that holds all the pages and a notes tab on the side that holds the notes you are using or the informtion you have. One of my main goals is to have pages of notes pop up on the screen so many can be viewed at once like sticky notes. 
 
