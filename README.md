@@ -1,4 +1,4 @@
-# C*nnecti*ns
+# Connections
 
 [My Notes](notes.md)
 
