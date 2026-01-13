@@ -2,7 +2,7 @@
 
 [My Notes](notes.md)
 
-I am going to make a website that can be used to create stories and plan them. When writing you often uses many tabs for notes and some can be hard to connect. I want ot create a website that allows you to write, plan, and have many refrances and connections between topics so it is easier to plan, make notes, and other such activities wehre connections need to be made between topics. 
+I am going to make a website that can be used to create stories and plan them. When writing you often uses many tabs for notes and some can be hard to connect. I want to create a website that allows you to write, plan, and have many refrances and connections between topics so it is easier to plan, make notes, and other such activities where connections need to be made between topics. 
 
 ## 🚀 Specification Deliverable
 
@@ -16,22 +16,23 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 ### Elevator pitch
 
-Writers and note takers often use many tools when creating. Some use paper to write down ideas as they can draw the connections, but they miss seeing the items all on one page. Computer users beneift from clear text, but miss a lot of the random colors and formatting of handwritten pages. I plan to make a website where you can have the clean clear writing of a computrer, and the ideas and connections of a notebook. A place where tabs can be taken, notes organized, but color coded, maped, connected and webbed to eachother. 
+Writers and note takers often use many tools when creating. Some use paper to write down ideas as they can draw the connections, but they miss seeing the items all on one page. Computer users beneift from clear text, but miss a lot of the random colors and formatting of handwritten pages. I plan to make a website where you can have the clean clear writing of a computer, and the ideas and connections of a notebook. A place where tabs can be taken, notes organized, but color coded, maped, connected and webbed to eachother. 
 
 
 ### Design
 
 ![Design image](images/design.png)
 
-I want to have three main pages. A Home page for introductions and sign in, a Notes page for main toics and file organization, and a Connections pageofr the visual connections and studying purposes. I want to have a tab at the top that holds all the pages and a notes tab on the side that holds the notes you are using or the informtion you have. One of my main goals is to have pages of notes pop up on the screen so many can be viewed at once like sticky notes. 
+I want to have three main pages. A Home page for introductions and sign in, a Notes page for main toics and file organization, and a Connections page for the visual connections and studying purposes. I want to have a tab at the top that holds all the pages and a notes tab on the side that holds the notes you are using. One of my main goals is to have pages of notes pop up on the screen so many can be viewed at once like sticky notes. 
 
 
 ### Key features
 
-- Note taking and saving ability
+- Note taking
+- Saving ability/Sign in
 - A page to make a web and connect ideas
 - Small screen pop ups of different tabs and/or topics
-- Many people ebing able to edit the same folder or notes
+- Many people able to edit the same folder or notes
 
 ### Technologies
 
@@ -39,10 +40,10 @@ I am going to use the required technologies in the following ways.
 
 - **HTML** - Basic website structure, like the skeleton
 - **CSS** - What makes the site formatted and organized for the users feel/interaction
-- **React** - Will help em in the layering of the tabs/topics that can appear
+- **React** - Will help me in the layering of the tabs/topics that can appear
 - **Service** - Will run the informtion from the backend/database to the front end or user
 - **DB/Login** - Holds a users login and their past entries
-- **WebSocket** - live update and connection, so live saving of the page. Multi-access to the same story?
+- **WebSocket** - live update and connection, so live saving of the page. Multi-access to the same story
 
 ## 🚀 AWS deliverable
 
