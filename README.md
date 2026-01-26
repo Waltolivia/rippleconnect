@@ -55,10 +55,10 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
+- [X] **HTML pages** - I made a skeleton for each of the pages, including an example page wether it is shown or hidden normally
+- [X] **Proper HTML element usage** - I used many elements like unorderd lists, lists, forms, inputs, and more
+- [X] **Links** - I have the pages linked between eachother and even have a link going to the first notebook on he sidebar as an example. 
+- [X] **Text** - I wrote desriptive paragraphs as well as Loum Ipsum parts to fill some space. 
 - [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
 - [ ] **Images** - I did not complete this part of the deliverable.
 - [ ] **Login placeholder** - I did not complete this part of the deliverable.
