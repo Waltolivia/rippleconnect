@@ -7,16 +7,20 @@ body {
 header {
     background-color:antiquewhite;
     color:rgb(39, 57, 131);
-    float: left;
     text-align:center;
     display: flex;
     padding-left: 3%;
     padding-right: 3%;
-    margin-left: 10%;
-    margin-right: 10%;
-    width: fill;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
     list-style: none;
     align-items: center;
-    gap: 4%;
+    gap: 2rem;
+    box-sizing: border-box;
+}
+
+header button {
+    align-items: right;
 }
 
