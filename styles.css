@@ -1,4 +1,4 @@
-
+/* code pen her a grid and flex layout which will match perfectly!*/
 
 body {
     background-color: rgb(39, 57, 131);
@@ -11,6 +11,7 @@ header {
     color:rgb(39, 57, 131);
     text-align:center;
     display: flex;
+    flex-direction: row;
     padding-left: 3%;
     padding-right: 3%;
     margin: 0 auto;
@@ -20,6 +21,7 @@ header {
     align-items: center;
     gap: 2rem;
     box-sizing: border-box;
+    
 }
 
 header button {
