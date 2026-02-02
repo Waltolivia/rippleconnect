@@ -15,39 +15,41 @@
         <button type="button">Login</button>
 
     </header>
+    
+    <div class="page-content">
+        <div class = "notebook_bar">
+            <a href="notes.html" class = "bar-item-button">Notebook1</a>
+            <a href="#" class = "bar-item-button">Notebook2</a>
+            <a href="#" class = "bar-item-button">Notebook3</a>
+            <button type="button">New Notebook</button>
+        </div> 
+        <div class="content">
+            <div style="margin: left 25%;">
+                <h1>Notebook1 - Page1</h1>
+                <h3>This is one of the Notebook pages. You can write your own stuff here. </h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt interdum ultricies. Proin posuere ex a luctus tempor. Pellentesque eget nulla tellus. Cras dictum, nunc a vestibulum tincidunt, metus mauris pretium velit, sed dapibus purus est nec ex. In eleifend sapien erat, et sollicitudin sapien cursus vel. Curabitur sit amet leo sit amet lectus congue mollis vel rhoncus purus. In tempus consectetur consectetur. Proin consequat diam pretium, fringilla enim vitae, mollis dolor. Phasellus tortor lacus, fermentum et consectetur non, feugiat eget ipsum. Integer ullamcorper vitae sapien quis cursus. Sed eleifend imperdiet ex nec commodo. Donec cursus ut tellus sit amet blandit. Nam ullamcorper finibus eros eu imperdiet. Praesent gravida, neque sed elementum varius, lacus erat mattis felis, id eleifend sem lectus nec tellus. Vivamus vitae sollicitudin magna, vitae varius lorem.</p>
+                <p>Ut interdum metus feugiat leo ultricies, vel ultricies elit sollicitudin. Integer ut sapien leo. Vestibulum egestas dui ut massa interdum, sit amet ornare ligula consectetur. Proin fermentum felis id mi faucibus sollicitudin. Pellentesque hendrerit scelerisque ex, ac dignissim tortor. Curabitur sit amet iaculis risus. In condimentum orci at dignissim auctor. Cras et lorem ac purus placerat ultrices quis et nisi. Ut aliquam, lectus sed eleifend mattis, purus urna ultricies ex, et accumsan elit eros consequat ipsum.</p>
+            </div>
 
-    <div class = "notebook_bar">
-        <a href="notes.html" class = "bar-item-button">Notebook1</a>
-        <a href="#" class = "bar-item-button">Notebook2</a>
-        <a href="#" class = "bar-item-button">Notebook3</a>
-        <button type="button">New Notebook</button>
-    </div> 
-    <div class="content">
-        <div style="margin: left 25%;">
-            <h1>Notebook1 - Page1</h1>
-            <h3>This is one of the Notebook pages. You can write your own stuff here. </h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt interdum ultricies. Proin posuere ex a luctus tempor. Pellentesque eget nulla tellus. Cras dictum, nunc a vestibulum tincidunt, metus mauris pretium velit, sed dapibus purus est nec ex. In eleifend sapien erat, et sollicitudin sapien cursus vel. Curabitur sit amet leo sit amet lectus congue mollis vel rhoncus purus. In tempus consectetur consectetur. Proin consequat diam pretium, fringilla enim vitae, mollis dolor. Phasellus tortor lacus, fermentum et consectetur non, feugiat eget ipsum. Integer ullamcorper vitae sapien quis cursus. Sed eleifend imperdiet ex nec commodo. Donec cursus ut tellus sit amet blandit. Nam ullamcorper finibus eros eu imperdiet. Praesent gravida, neque sed elementum varius, lacus erat mattis felis, id eleifend sem lectus nec tellus. Vivamus vitae sollicitudin magna, vitae varius lorem.</p>
-            <p>Ut interdum metus feugiat leo ultricies, vel ultricies elit sollicitudin. Integer ut sapien leo. Vestibulum egestas dui ut massa interdum, sit amet ornare ligula consectetur. Proin fermentum felis id mi faucibus sollicitudin. Pellentesque hendrerit scelerisque ex, ac dignissim tortor. Curabitur sit amet iaculis risus. In condimentum orci at dignissim auctor. Cras et lorem ac purus placerat ultrices quis et nisi. Ut aliquam, lectus sed eleifend mattis, purus urna ultricies ex, et accumsan elit eros consequat ipsum.</p>
-        </div>
+            <div class="sticky-note">This is a small sticky note to the side. This is best for definitions or connections</div>
+            <div class="index-card">
+                <img src="images/starryexampleimg.png" alt="Blue Links">
+                This is the starry sarry night painting
+                <ul>
+                    <li>It is a beautiful painting</li>
+                    <li>I love the colors</li>
+                    <li>This is a note that can be used for ideas, time, and other such things</li>
+                </ul>
+            </div>
 
-        <div class="sticky-note">This is a small sticky note to the side. This is best for definitions or connections</div>
-        <div class="index-card">
-            <img src="images/starryexampleimg.png" alt="Blue Links">
-            This is the starry sarry night painting
-            <ul>
-                <li>It is a beautiful painting</li>
-                <li>I love the colors</li>
-                <li>This is a note that can be used for ideas, time, and other such things</li>
-            </ul>
-        </div>
-
-        <div class="New-Note">
-            <form action="/new_notebook.php">
-                <label for="title">Title... </label>
-                <input type="text" id="title" name="title"><br><br>
-                <label for="note">write...</label>
-                <input type="text" id="note" name="note"><br><br>
-            </form>
+            <div class="New-Note">
+                <form action="/new_notebook.php">
+                    <label for="title">Title... </label>
+                    <input type="text" id="title" name="title"><br><br>
+                    <label for="note">write...</label>
+                    <input type="text" id="note" name="note"><br><br>
+                </form>
+            </div>
         </div>
     </div>
 
