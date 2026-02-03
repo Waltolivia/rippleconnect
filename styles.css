@@ -31,6 +31,7 @@ header button {
 
 .page-content {
     display: flex;
+    overflow-y: scroll;
 }
 
 .notebook_bar {
@@ -65,6 +66,13 @@ header button {
 
 }
 
+
+
+.continer {
+    padding: 10px;
+    overflow-y: scroll;
+    display: flex;
+}
 
 
 
