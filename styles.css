@@ -201,3 +201,8 @@ h1 {
 }
 
 
+
+footer {
+    flex-direction: row;
+}
+
