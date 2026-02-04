@@ -104,11 +104,22 @@ h1 {
 .content-notes {
     flex: 1;
     display: grid;
-    grid-template-columns: minmax(35em, 1fr) 18em;
+    grid-template-columns: minmax(35em, 1fr) minmax(35em, 1fr);
     grid-template-rows: auto auto;
-    gap: 2rem;
+    gap: 1.5rem;
     padding: 3rem;
     overflow-y: auto;
+    align-content: start;
+}
+
+.stickynotes {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14em, 18em));
+    gap: 1.5rem;
+    align-content: start;
+
 }
 
 .note {
@@ -123,24 +134,18 @@ h1 {
 }
 
 .sticky-note {
-    grid-column: 2;
-    grid-row: 1;
     background-color: rgba(243, 238, 95, 0.852);
     color: black;
-    width: 15em;
-    height: 14em;
+    min-height: 12em;
     padding: 1rem;
 }
 
 
 .index-card {
-    grid-column: 2;
-    grid-row: 2;
     background-color:rgb(248, 232, 225);
     color: black;
     border-radius: 0.5em;
-    padding:1rem;
-    max-width: 30em;
+    padding: 1rem;
 }
 
 
