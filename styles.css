@@ -55,6 +55,7 @@ h1 {
     row-gap: 1em;
     text-align: left;
     max-height: 40em;
+    padding-top: 1rem;
 }
 
 .bar-item-button{
@@ -101,6 +102,9 @@ h1 {
     display: flex;
 }
 
+
+
+/* This is all the notebook page css */
 .content-notes {
     flex: 1;
     display: grid;
