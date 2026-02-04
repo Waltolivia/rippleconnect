@@ -31,24 +31,29 @@ header button {
     text-align: right;
 }
 
+h1 {
+    font-size: xx-large;
+}
+
 .page-content {
     display: flex;
-    overflow-y: scroll;
+    min-height: 100vh;
 }
 
 .notebook_bar {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    color: white;
+    color: rgb(255, 255, 255);
     background-color:rgb(235, 162, 136);
-    width: 20%;
-    max-width: 15em;
+    width: 15em;
+    flex-shrink: 0;
+    max-width: 12em;
     margin-top: 8%;
     margin-bottom: 8%;
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
     row-gap: 1em;
+    text-align: left;
 }
 
 .bar-item-button{
@@ -58,10 +63,16 @@ header button {
     padding-bottom: 8%;
     padding-right: 2%;
     font-size: large;
+    text-decoration: none; 
+    color: inherit;
 }
 
 .new_notebook{
-    align-items: bottom;
+    margin-top: auto;
+    margin-bottom: 2%;
+    margin-left: 15%;
+    margin-right: 15% ;
+    
 }
 
 .content {
