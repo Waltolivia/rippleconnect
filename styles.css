@@ -6,6 +6,7 @@ body {
     margin-top: 0;
     margin-bottom: 0;
     text-align: center;
+    font-family: 'Quicksand', serif;
 }
 
 header {
@@ -42,6 +43,7 @@ header button {
 
 h1 {
     font-size: xx-large;
+    font-family: 'Playfair Display' , serif;
 }
 
 .page-content {
@@ -59,6 +61,7 @@ h1 {
     max-width: 12em;
     margin-top: 8%;
     margin-bottom: 8%;
+    margin-right: 0;
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
     row-gap: 1em;
