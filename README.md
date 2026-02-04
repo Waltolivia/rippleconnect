@@ -69,12 +69,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Visually appealing colors and layout. No overflowing elements.** - I did not complete this part of the deliverable.
-- [ ] **Use of a CSS framework** - I did not complete this part of the deliverable.
-- [ ] **All visual elements styled using CSS** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing using flexbox and/or grid display** - I did not complete this part of the deliverable.
-- [ ] **Use of a imported font** - I did not complete this part of the deliverable.
-- [ ] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
+- [X] **Visually appealing colors and layout. No overflowing elements.** - I choose custom colors for my page and elements that each page reflects
+- [X] **Use of a CSS framework** - I used a lot of grids to get my notebooks page looking how I wanted
+- [X] **All visual elements styled using CSS** - One of my favoite parts I learned in this is border-radius which allows my to style my boxes differently
+- [X] **Responsive to window resizing using flexbox and/or grid display** - Most pages use a flex style, but my ntoes page uses grid to resize and add more columns if possible
+- [X] **Use of a imported font** - I am not sure I like the font I. am using now so I might change it but for now I have Indie Flower as my pages font
+- [X] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I have type, class, and more such things to seperate items 
 
 ## 🚀 React part 1: Routing deliverable
 
