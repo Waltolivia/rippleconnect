@@ -26,6 +26,15 @@ header {
     border-bottom-left-radius: 1em;
 }
 
+header a {
+    text-decoration: none; 
+    color: inherit;
+}
+
+header a:hover {
+    color: rgb(126, 117, 117);
+}
+
 header button {
     align-items: right;
     text-align: right;
@@ -58,6 +67,10 @@ h1 {
     padding-top: 1rem;
 }
 
+.notebook_bar li:hover {
+    color: rgb(67, 56, 56);
+}
+
 .bar-item-button{
     text-align: left;
     padding-left: 5%;
@@ -79,7 +92,7 @@ h1 {
 
 .content {
     flex: 1;
-    display: grid;
+    display: flex;
     flex-direction: column;
     overflow-y: auto;
     max-width: 70em;
