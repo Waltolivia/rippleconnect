@@ -16,12 +16,13 @@ header {
     padding-right: 3%;
     margin: 0 auto;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     list-style: none;
     align-items: center;
     gap: 2rem;
     box-sizing: border-box;
-    
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
 }
 
 header button {
@@ -40,11 +41,22 @@ header button {
     flex-direction: column;
     color: white;
     background-color:rgb(235, 162, 136);
-    width: 25%;
+    width: 20%;
     margin-top: 8%;
     margin-bottom: 8%;
-    border-top-right-radius: 3%;
-    border-bottom-right-radius: 3%;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    row-gap: 1em;
+}
+
+.bar-item-button{
+    text-align: left;
+    padding-left: 5%;
+    padding-top: 5%;
+    padding-bottom: 8%;
+    padding-right: 2%;
+    font-size: large;
+
 }
 
 .content {
@@ -52,7 +64,7 @@ header button {
     display: flex;
     flex-direction: column;
     overflow-y: clip;
-    width: 75% ;
+    width: 80% ;
     padding: 5%
 }
 
