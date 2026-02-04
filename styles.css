@@ -42,6 +42,7 @@ header button {
     color: white;
     background-color:rgb(235, 162, 136);
     width: 20%;
+    max-width: 15em;
     margin-top: 8%;
     margin-bottom: 8%;
     border-top-right-radius: 1em;
@@ -56,7 +57,10 @@ header button {
     padding-bottom: 8%;
     padding-right: 2%;
     font-size: large;
+}
 
+.new_notebook{
+    align-items: bottom;
 }
 
 .content {
@@ -64,7 +68,7 @@ header button {
     display: flex;
     flex-direction: column;
     overflow-y: clip;
-    width: 80% ;
+    width: 80%;
     padding: 5%
 }
 
@@ -77,8 +81,6 @@ header button {
     margin-right: 40%;
 
 }
-
-
 
 .continer {
     padding: 10px;
