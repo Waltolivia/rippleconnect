@@ -15,7 +15,6 @@ export default function App() {
         <header>
           <nav>
             <NavLink to="Home">Home</NavLink>
-            <NavLink to="About">About</NavLink>
             <NavLink to="Notes">Notes</NavLink>
             <NavLink to ="Connect">Connect</NavLink>
           </nav>
@@ -23,7 +22,6 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
           <Route path="/notes" element={<Notes />}/>
           <Route path="/connect" element={<Connect />}/>
         </Routes>
