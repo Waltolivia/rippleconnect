@@ -80,9 +80,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [X] **Bundled using Vite** - I got vite added to my system and able to run
+- [X] **Components** - I got the componants moved to their positions and organized. 
+- [X] **Router** - The routing took a minute to make sure everything synced, but I got it all linked up and set. 
 
 ## 🚀 React part 2: Reactivity deliverable
 
