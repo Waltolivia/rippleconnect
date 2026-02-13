@@ -3,24 +3,13 @@ import React from "react";
 export function Notes() {
   return (
     <main>
-      <div className="page-content">
-        <div className="notebook_bar">
-          <ul>
-            <li>
-              <a href="#" className="bar-item-button">Notebook1</a>
-            </li>
-            <li>
-              <a href="#" className="bar-item-button">Notebook2</a>
-            </li>
-            <li>
-              <a href="#" className="bar-item-button">Notebook3</a>
-            </li>
-          </ul>
-
-          <button className="new_notebook" type="button">
-            New Notebook
-          </button>
-        </div>
+        <div class="page-content">
+            <div class = "notebook_bar">
+                <li><a href="notes.html" class = "bar-item-button">Notebook1</a></li>
+                <li><a href="#" class = "bar-item-button">Notebook2</a></li>
+                <li><a href="#" class = "bar-item-button">Notebook3</a></li>
+                <button class="new_notebook" type="button">New Notebook</button>
+            </div>  
 
         <div className="content-notes">
           <div className="note">

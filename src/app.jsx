@@ -10,25 +10,25 @@ import { Connect } from './connect/connect'
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="app bg-dark text-light">
+      <div className="app">
 
         <header>
           <nav>
-            <NavLink to="Home">Home</NavLink>
+            <NavLink to="home">Home</NavLink>
             <NavLink to="Notes">Notes</NavLink>
             <NavLink to ="Connect">Connect</NavLink>
           </nav>
         </header>
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/notes" element={<Notes />}/>
           <Route path="/connect" element={<Connect />}/>
         </Routes>
 
         <footer>
           <p>Your Name</p>
-          <a href="https://github.com/yourusername/startup">
+          <a href="https://github.com/Waltolivia/rippleconnect.git">
             GitHub Repo
           </a>
         </footer>
