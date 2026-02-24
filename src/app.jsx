@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { useState, useEffect } from "react";
 
 import { Home } from './home/home';
 import { Notes } from './notes/notes';

@@ -1,23 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+
 
 export function Notes() {
+  const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
+
+  function addNote() {
+    const newNote = {
+      id: Date.now(),
+      title: title,
+      text: text
+    };
+
+    setNotes([...notes, newNote]);
+    setTitle("");
+    setText("");
+  }
+
   return (
     <main>
-        <div class="page-content">
-            <div class = "notebook_bar">
-                <li><a href="notes.html" class = "bar-item-button">Notebook1</a></li>
-                <li><a href="#" class = "bar-item-button">Notebook2</a></li>
-                <li><a href="#" class = "bar-item-button">Notebook3</a></li>
-                <button class="new_notebook" type="button">New Notebook</button>
+        <div className="page-content">
+            <div className = "notebook_bar">
+                <li><a href="notes.html" className = "bar-item-button">Notebook1</a></li>
+                <li><a href="#" className = "bar-item-button">Notebook2</a></li>
+                <li><a href="#" className = "bar-item-button">Notebook3</a></li>
+                <button className="new_notebook" type="button">New Notebook</button>
             </div>  
 
         <div className="content-notes">
-          <div className="note">
-            <h1>Notebook1 - Page1</h1>
-            <h3>This is one of the Notebook pages.</h3>
-            <p>Paragraph text...</p>
-            <p>More paragraph text...</p>
-          </div>
+          {notes.map(note => (
+            <div key={note.id} className="note">
+              <h2>{note.title}</h2>
+              <p>{note.text}</p>
+              </div>
+          ))}
 
           <div className="stickynotes">
             <div className="sticky-note">
@@ -43,11 +61,22 @@ export function Notes() {
           <div className="New-Note">
             <form>
               <label htmlFor="title">Title: </label>
-              <input type="text" id="title" name="title" />
+              <input 
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                />
               <br /><br />
 
               <label htmlFor="note">Text:</label>
-              <input type="text" id="note" name="note" />
+              <input 
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                />
+              <button type="button" onClick={addNote}>
+                Add Note
+              </button>
               <br /><br />
             </form>
           </div>
