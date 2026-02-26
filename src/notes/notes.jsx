@@ -10,7 +10,7 @@ export function Notes() {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [selectedStickyId, setSelectedStickyId] = useState(null);
   const selectedNote = notes.find(n => n.id === selectedNoteId);
-  const[sticky, setSticky] = useState("");
+  const selectedSticky = stickies.find(s => s.id === selectedStickyId);
 
   useEffect(() =>{      //load notes when page open
     const saved = localStorage.getItem("notes");
@@ -52,6 +52,13 @@ export function Notes() {
     setNotes(updated)
   }
 
+
+  function updateStickyText(value) {
+    const updated = stickies.map(sticky => sticky.id === selectedStickyId ? {
+      ...sticky, text: value } : sticky);
+    setStickyies(updated)
+  }
+
   return (
     <main>
         <div className="page-content">
@@ -76,15 +83,15 @@ export function Notes() {
           ))}
 
 
-          <div className="stickynotes">
-            {notes.map(note =>(
-              <div key={note.id} className="sticky-note" onClick={() => setSelectedNoteId(note.id)}>
-                {selectedNote && (
-                  <div className="Sticky-edioter">
-                    <textarea value = {selectedNote?.text || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your note here..." rows = {10} col={20} />
-                  </div> )}
+        <div className="stickynotes">
+            {stickies.map(sticky => (
+              <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)} >
+                {selectedStickyId === sticky.id && (
+                  <textarea value={sticky.text} onChange={(e) => updateStickyText(e.target.value)} placeholder="Type your note here..." rows={10} cols={20}/>
+                )}
               </div>
             ))}
+        </div>
 
             <div className="index-card">
               <img
@@ -121,7 +128,7 @@ export function Notes() {
 
           <div className="New-Sticky">
             <form>
-              <button type="button" onClick={addStickyNote}>
+              <button type="button" onClick={addSticky}>
                 Add StickyNote
               </button>
               <br /><br />
