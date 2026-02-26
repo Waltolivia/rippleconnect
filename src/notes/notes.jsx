@@ -8,6 +8,7 @@ export function Notes() {
   const [text, setText] = useState("");
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const selectedNote = notes.find(n => n.id === selectedNoteId);
+  const[sticky, setSticky] = useState("");
 
   useEffect(() =>{      //load notes when page open
     const saved = localStorage.getItem("notes");
@@ -64,9 +65,14 @@ export function Notes() {
 
 
           <div className="stickynotes">
-            <div className="sticky-note">
-              This is a small sticky note to the side.
-            </div>
+            {notes.map(note =>(
+              <div key={note.id} className="sticky-note" onClick={() => setSelectedNoteId(note.id)}>
+                {selectedNote && (
+                  <div className="Sticky-edioter">
+                    <textarea value = {selectedNote?.tect || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your note here..." rows = {10} col={20} />
+                  </div> )}
+              </div>
+            ))}
 
             <div className="index-card">
               <img
@@ -96,6 +102,23 @@ export function Notes() {
 
               <button type="button" onClick={addNote}>
                 Add Note
+              </button>
+              <br /><br />
+            </form>
+          </div>
+
+          <div className="New-Sticky">
+            <form>
+              <label htmlFor="Sticky">StickyNote </label>
+              <input 
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                />
+              <br /><br />
+
+              <button type="button" onClick={addNote}>
+                Add StickyNote
               </button>
               <br /><br />
             </form>
