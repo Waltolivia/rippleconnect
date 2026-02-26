@@ -133,7 +133,7 @@ export function Notes() {
               {stickies.map(sticky => (
                 <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)} >
                   {selectedStickyId === sticky.id ? (
-                    <textarea value={sticky.text || ""} onChange={(e) => updateStickyText(e.target.value)} onBlur={() => setSelectedStickyId(null)} placeholder="Type your note here..." rows={10} cols={20} autoFocus/>
+                    <textarea value={sticky.text || ""} onChange={(e) => updateStickyText(e.target.value)} onBlur={() => setSelectedStickyId(null)} placeholder="Type your note here..." rows={5} cols={20} autoFocus/>
                   ) : (
                   <p>{sticky.text || "Click to edit..."}</p>)}
                 </div>
@@ -146,7 +146,7 @@ export function Notes() {
                   <div key={index.id} className="Index-note" onClick={() => setSelectedIndexId(index.id)}>
                   <img src="/images/starryexampleimg.png" alt="Blue Links" width="250" />
                     {selectedIndexId === index.id ? (
-                      <textarea value={index.text || ""} onChange={(e) => updateIndexText(e.target.value)} onBlur={() => setSelectedIndexId(null)} placeholder="Type your notes here..." rows={10} cols={20} autoFocus />
+                      <textarea value={index.text || ""} onChange={(e) => updateIndexText(e.target.value)} onBlur={() => setSelectedIndexId(null)} placeholder="Type your notes here..." rows={5} cols={15} autoFocus />
                     ) : (
                       <p>{indexes.text || "Click to edit..."}</p>)}
                       </div>
