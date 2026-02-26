@@ -6,7 +6,7 @@ export function Notes() {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  const [selectedNoteId, setSelectedeNotesId] = useState(null);
+  const [selectedNoteId, setSelectedNoteId] = useState(null);
   const selectedNote = notes.find(n => n.id === selectedNoteId);
 
   useEffect(() =>{      //load notes when page open
@@ -30,9 +30,10 @@ export function Notes() {
     setNotes([...notes, newNote]);
     setSelectedNoteId(newNote.id);
     setTitle("");
+    setText("");
   }
 
-  function updateNotesTexxt(value) {
+  function updatedNoteText(value) {
     const updated = notes.map(note => note.id === selectedNoteId ? { 
       ...note, text: value }: note);
     setNotes(updated)
@@ -52,15 +53,15 @@ export function Notes() {
           {notes.map(note => (
             <div key={note.id} className="note" onClick={() => setSelectedNoteId(note.id)}>
               <h2>{note.title}</h2>
-              </div>
+
+            {selectedNote && (
+              <div className="note-editor">
+              <textarea value = {selectedNote?.text || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your text here..." rows={20} cols={60} />
+              </div>)}
+
+                </div>
           ))}
 
-          {selectedNote && (
-            <div className="note-editor">
-            <h2>{selectedNote.title}</h2>
-            
-            <textarea value = {selectedNote.text} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your text here..." rows={10} cols={50} />
-             </div>)}
 
           <div className="stickynotes">
             <div className="sticky-note">
