@@ -23,6 +23,19 @@ export function Notes() {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
+
+  useEffect(() => {
+    const saved = localStorage.getItem("stickies");
+    if(saved)setStickies(JSON.parse(saved));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("stickies", JSON.stringify(stickies)); 
+  }, [stickies]);
+
+  
+
+
   function addNote() {
     const newNote = {
       id: Date.now(),
@@ -56,7 +69,7 @@ export function Notes() {
   function updateStickyText(value) {
     const updated = stickies.map(sticky => sticky.id === selectedStickyId ? {
       ...sticky, text: value } : sticky);
-    setStickyies(updated)
+    setStickies(updated)
   }
 
   return (
@@ -79,63 +92,63 @@ export function Notes() {
               <textarea value = {selectedNote?.text || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your text here..." rows={20} cols={60} />
               </div>)}
 
-                </div>
-          ))}
-
-
-        <div className="stickynotes">
-            {stickies.map(sticky => (
-              <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)} >
-                {selectedStickyId === sticky.id && (
-                  <textarea value={sticky.text} onChange={(e) => updateStickyText(e.target.value)} placeholder="Type your note here..." rows={10} cols={20}/>
-                )}
-              </div>
+          </div>
             ))}
-        </div>
 
-            <div className="index-card">
-              <img
-                src="/images/starryexampleimg.png"
-                alt="Blue Links"
-                width="250"
-              />
-              <p>This is the starry night painting</p>
 
-              <ul>
-                <li>It is a beautiful painting</li>
-                <li>I love the colors</li>
-                <li>This is a note for ideas</li>
-              </ul>
-            </div>
+          <div className="stickynotes">
+              {stickies.map(sticky => (
+                <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)} >
+                  {selectedStickyId === sticky.id && (
+                    <textarea value={sticky.text} onChange={(e) => updateStickyText(e.target.value)} placeholder="Type your note here..." rows={10} cols={20}/>
+                  )}
+                </div>
+              ))}
           </div>
 
-          <div className="New-Note">
-            <form>
-              <label htmlFor="title">Title: </label>
-              <input 
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+              <div className="index-card">
+                <img
+                  src="/images/starryexampleimg.png"
+                  alt="Blue Links"
+                  width="250"
                 />
-              <br /><br />
+                <p>This is the starry night painting</p>
 
-              <button type="button" onClick={addNote}>
-                Add Note
-              </button>
-              <br /><br />
-            </form>
+                <ul>
+                  <li>It is a beautiful painting</li>
+                  <li>I love the colors</li>
+                  <li>This is a note for ideas</li>
+                </ul>
+              </div>
+            
+
+            <div className="New-Note">
+              <form>
+                <label htmlFor="title">Title: </label>
+                <input 
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  />
+                <br /><br />
+
+                <button type="button" onClick={addNote}>
+                  Add Note
+                </button>
+                <br /><br />
+              </form>
+            </div>
+
+            <div className="New-Sticky">
+              <form>
+                <button type="button" onClick={addSticky}>
+                  Add StickyNote
+                </button>
+                <br /><br />
+              </form>
+          </div>
           </div>
 
-          <div className="New-Sticky">
-            <form>
-              <button type="button" onClick={addSticky}>
-                Add StickyNote
-              </button>
-              <br /><br />
-            </form>
-          </div>
-
-        </div>
       </div>
     </main>
   );
