@@ -32,6 +32,12 @@ export function Notes() {
     setTitle("");
   }
 
+  function updateNotesTexxt(value) {
+    const updated = notes.map(note => note.id === selectedNoteId ? { 
+      ...note, text: value }: note);
+    setNotes(updated)
+  }
+
   return (
     <main>
         <div className="page-content">
@@ -44,11 +50,17 @@ export function Notes() {
 
         <div className="content-notes">
           {notes.map(note => (
-            <div key={note.id} className="note">
+            <div key={note.id} className="note" onClick={() => setSelectedNoteId(note.id)}>
               <h2>{note.title}</h2>
-              <p>{note.text}</p>
               </div>
           ))}
+
+          {selectedNote && (
+            <div className="note-editor">
+            <h2>{selectedNote.title}</h2>
+            
+            <textarea value = {selectedNote.text} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your text here..." rows={10} cols={50} />
+             </div>)}
 
           <div className="stickynotes">
             <div className="sticky-note">
