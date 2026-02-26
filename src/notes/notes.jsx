@@ -5,12 +5,15 @@ import React, { useState, useEffect } from "react";
 export function Notes() {
   const [notes, setNotes] = useState([]);
   const [stickies, setStickies] = useState([]);
+  const [indexes, setIndexes] = useState([]);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [selectedStickyId, setSelectedStickyId] = useState(null);
+  const [selectedIndexId, setSelectedIndexId] = useStates(null);
   const selectedNote = notes.find(n => n.id === selectedNoteId);
   const selectedSticky = stickies.find(s => s.id === selectedStickyId);
+  const selectedIndex = indexes.find(i => i.id == selectedIndexId);
 
   useEffect(() =>{      //load notes when page open
     const saved = localStorage.getItem("notes");
@@ -24,6 +27,7 @@ export function Notes() {
   }, [notes]);
 
 
+
   useEffect(() => {
     const saved = localStorage.getItem("stickies");
     if(saved)setStickies(JSON.parse(saved));
@@ -33,6 +37,19 @@ export function Notes() {
     localStorage.setItem("stickies", JSON.stringify(stickies)); 
   }, [stickies]);
 
+
+
+  useEffect(() => {
+    const saved = localStorage.getItem("indexes");
+    if (saved) {
+      setIndexes(JSON.parse(saved));
+    }
+  }, []);
+
+
+  useEffect(( => {
+    localStorage.setItem("indexes", JSON.stringify(indexes));
+  }, [indexes]))
   
 
 
@@ -87,24 +104,28 @@ export function Notes() {
             <div key={note.id} className="note" onClick={() => setSelectedNoteId(note.id)}>
               <h2>{note.title}</h2>
 
-            {selectedNote && (
-              <div className="note-editor">
-              <textarea value = {selectedNote?.text || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your text here..." rows={20} cols={60} />
-              </div>)}
-
-          </div>
-            ))}
+              {selectedNoteId === note.id ? (
+                <textarea value={note.text || ""} onChange={(e) => updatedNoteText(e.target.value)} onBlur={() => setSelectedNoteId(null)} placeholder="Type your text here..." rows={20} cols={60} autoFocus/>
+              ) : (
+                <p>{note.text || "Click to edit..."}</p>
+              )}
+            </div>
+          ))}
 
 
           <div className="stickynotes">
               {stickies.map(sticky => (
                 <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)} >
-                  {selectedStickyId === sticky.id && (
-                    <textarea value={sticky.text} onChange={(e) => updateStickyText(e.target.value)} placeholder="Type your note here..." rows={10} cols={20}/>
-                  )}
+                  {selectedStickyId === sticky.id ? (
+                    <textarea value={sticky.text || ""} onChange={(e) => updateStickyText(e.target.value)} onBlur={() => setSelectedStickyId(null)} placeholder="Type your note here..." rows={10} cols={20} autoFocus/>
+                  ) : (
+                  <p>{sticky.text || "Click to edit..."}</p>)}
                 </div>
               ))}
           </div>
+
+
+
 
               <div className="index-card">
                 <img
@@ -121,6 +142,9 @@ export function Notes() {
                 </ul>
               </div>
             
+
+                
+
 
             <div className="New-Note">
               <form>
