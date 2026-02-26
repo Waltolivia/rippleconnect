@@ -10,10 +10,10 @@ export function Notes() {
   const [text, setText] = useState("");
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [selectedStickyId, setSelectedStickyId] = useState(null);
-  const [selectedIndexId, setSelectedIndexId] = useStates(null);
+  const [selectedIndexId, setSelectedIndexId] = useState(null);
   const selectedNote = notes.find(n => n.id === selectedNoteId);
   const selectedSticky = stickies.find(s => s.id === selectedStickyId);
-  const selectedIndex = indexes.find(i => i.id == selectedIndexId);
+  const selectedIndex = indexes.find(i => i.id === selectedIndexId);
 
   useEffect(() =>{      //load notes when page open
     const saved = localStorage.getItem("notes");
@@ -47,9 +47,9 @@ export function Notes() {
   }, []);
 
 
-  useEffect(( => {
+  useEffect(() => {
     localStorage.setItem("indexes", JSON.stringify(indexes));
-  }, [indexes]))
+  }, [indexes])
   
 
 
@@ -76,6 +76,15 @@ export function Notes() {
     setSelectedStickyId(newSticky.id);
   }
 
+  function addIndex() {
+    const newIndex = {
+      id: Date.now(),
+      text: ""
+    };
+    setIndexes([...indexes, newIndex]);
+    setSelectedIndexId(newIndex.id);
+  }
+
   function updatedNoteText(value) {
     const updated = notes.map(note => note.id === selectedNoteId ? { 
       ...note, text: value }: note);
@@ -88,6 +97,13 @@ export function Notes() {
       ...sticky, text: value } : sticky);
     setStickies(updated)
   }
+
+  function updateIndexText(value){
+    const updated = indexes.map(index => index.id === selectedIndexId ? {
+      ...index, text: value }: index);
+      setIndexes(updated)
+  }
+
 
   return (
     <main>
@@ -124,26 +140,19 @@ export function Notes() {
               ))}
           </div>
 
-
-
-
+              {indexes.length > 0 && (
               <div className="index-card">
-                <img
-                  src="/images/starryexampleimg.png"
-                  alt="Blue Links"
-                  width="250"
-                />
-                <p>This is the starry night painting</p>
-
-                <ul>
-                  <li>It is a beautiful painting</li>
-                  <li>I love the colors</li>
-                  <li>This is a note for ideas</li>
-                </ul>
+                {indexes.map(index => (
+                  <div key={index.id} className="Index-note" onClick={() => setSelectedIndexId(index.id)}>
+                  <img src="/images/starryexampleimg.png" alt="Blue Links" width="250" />
+                    {selectedIndexId === index.id ? (
+                      <textarea value={index.text || ""} onChange={(e) => updateIndexText(e.target.value)} onBlur={() => setSelectedIndexId(null)} placeholder="Type your notes here..." rows={10} cols={20} autoFocus />
+                    ) : (
+                      <p>{indexes.text || "Click to edit..."}</p>)}
+                      </div>
+                    ))}
               </div>
-            
-
-                
+              )}
 
 
             <div className="New-Note">
@@ -166,11 +175,23 @@ export function Notes() {
             <div className="New-Sticky">
               <form>
                 <button type="button" onClick={addSticky}>
-                  Add StickyNote
+                  Add Sticky Note
                 </button>
                 <br /><br />
               </form>
-          </div>
+            </div>
+
+            <div className="New-Index">
+              <form>
+                <button type="button" onClick={addIndex}>
+                  Add Index Card
+                </button>
+                <br /><br />
+              </form>
+            </div>
+
+
+
           </div>
 
       </div>
