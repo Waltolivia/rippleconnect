@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 
 export function Notes() {
   const [notes, setNotes] = useState([]);
+  const [stickies, setStickies] = useState([]);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [selectedNoteId, setSelectedNoteId] = useState(null);
+  const [selectedStickyId, setSelectedStickyId] = useState(null);
   const selectedNote = notes.find(n => n.id === selectedNoteId);
   const[sticky, setSticky] = useState("");
 
@@ -32,6 +34,16 @@ export function Notes() {
     setSelectedNoteId(newNote.id);
     setTitle("");
     setText("");
+  }
+
+  function addSticky() {
+    const newSticky = {
+      id: Date.now(),
+      text: ""
+    };
+
+    setStickies([...stickies, newSticky]);
+    setSelectedStickyId(newSticky.id);
   }
 
   function updatedNoteText(value) {
@@ -69,7 +81,7 @@ export function Notes() {
               <div key={note.id} className="sticky-note" onClick={() => setSelectedNoteId(note.id)}>
                 {selectedNote && (
                   <div className="Sticky-edioter">
-                    <textarea value = {selectedNote?.tect || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your note here..." rows = {10} col={20} />
+                    <textarea value = {selectedNote?.text || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder = "Type your note here..." rows = {10} col={20} />
                   </div> )}
               </div>
             ))}
@@ -109,15 +121,7 @@ export function Notes() {
 
           <div className="New-Sticky">
             <form>
-              <label htmlFor="Sticky">StickyNote </label>
-              <input 
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                />
-              <br /><br />
-
-              <button type="button" onClick={addNote}>
+              <button type="button" onClick={addStickyNote}>
                 Add StickyNote
               </button>
               <br /><br />
