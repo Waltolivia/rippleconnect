@@ -6,6 +6,19 @@ export function Notes() {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [selectedNoteId, setSelectedeNotesId] = useState(null);
+  const selectedNote = notes.find(n => n.id === selectedNoteId);
+
+  useEffect(() =>{      //load notes when page open
+    const saved = localStorage.getItem("notes");
+    if (saved) {
+      setNotes(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {     //save notes when they change
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
 
   function addNote() {
     const newNote = {
@@ -15,8 +28,8 @@ export function Notes() {
     };
 
     setNotes([...notes, newNote]);
+    setSelectedNoteId(newNote.id);
     setTitle("");
-    setText("");
   }
 
   return (
