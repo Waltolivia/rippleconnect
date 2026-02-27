@@ -104,12 +104,12 @@ header .bar-item-button {
 }
 
 .content {
+    position: relative;
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    max-width: 70em;
-    padding: 3rem;
+    border: 2px solid #05121d;
+    height: 500px;
+    background-color: #172e42;
+
 }
 
 .button_start {
@@ -204,13 +204,11 @@ header .bar-item-button {
 
 .connect-page-content {
     flex: 1;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     max-width: 70em;
-    padding: 2rem;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 2rem;
-    justify-items: center;
+    padding: 2em;
 }
 
 .icon-item {
