@@ -26,48 +26,59 @@ function DraggableItem({ id, label, src, onRename }) {
 
 export function Connect() {
 
-      const [items, setItems] = useState([
-    {id: 1, x: 50, y: 50, label: "Starry Night", src: "images/starryexampleimg.png",},
-    {id: 2, x: 200, y: 100, label: "Notebook1", src: "images/documenticon.png", },
-    {id: 3, x: 350, y: 150, label: "Sticky Note",src: "images/documenticon.png",},
+  const [items, setItems] = useState([
+    { id: "1", label: "Starry Night", src: "images/starryexampleimg.png" },
+    { id: "2", label: "Notebook1", src: "images/documenticon.png" },
+    { id: "3", label: "Sticky Note", src: "images/documenticon.png" }
   ]);
 
   const addItem = () => {
-    const newItem = {id: Date.now(), x: 100, y: 100, label: "New Item", src: "images/documenticon.png",};
+    const newItem = {
+      id: Date.now().toString(),
+      label: "New Item",
+      src: "images/documenticon.png"
+    };
     setItems([...items, newItem]);
   };
 
   const renameItem = (id, newLabel) => {
-    setItems(items.map((item) => item.id === id ? { ...item, label: newLabel } : item));
+    setItems(items.map((item) =>
+      item.id === id ? { ...item, label: newLabel } : item
+    ));
   };
-
 
   return (
     <main>
-        <div className="page-content">
-            <div className="notebook_bar">
-                <li><NavLink to="/notes" className="bar-item-button">Notebook1</NavLink></li>
-                <li><NavLink to="/notes" className="bar-item-button">Notebook2</NavLink></li>
-                <li><NavLink to="/notes" className="bar-item-button">Notebook3</NavLink></li>
-                <button className="new_notebook" type="button">New Notebook</button>
-            </div>
-        
-        
-        <div className="connect-page-content">
-            <button onClick={addItem}>Add Item</button>
+      <div className="page-content">
 
-            <div className="content" style={{ position: "relative", height: "500px", border: "2px solid gray", }}>
-                {items.map((item) => (
-                <Draggable key={item.id} defaultPosition={{ x: item.x, y: item.y }}>
-                    <div style={{ position: "absolute", textAlign: "center", cursor: "move",}}>
-                    <img src={item.src} alt={item.label} width="80"/>
-                    <input value={item.label} onChange={(e) => renameItem(item.id, e.target.value)} style={{ textAlign: "center" }}/>
-                    </div>
-                </Draggable>
-                ))}
-            </div>
-            </div>
+        <div className="notebook_bar">
+          <ul>
+            <li><NavLink to="/notes" className="bar-item-button">Notebook1</NavLink></li>
+            <li><NavLink to="/notes" className="bar-item-button">Notebook2</NavLink></li>
+            <li><NavLink to="/notes" className="bar-item-button">Notebook3</NavLink></li>
+          </ul>
+          <button className="new_notebook" type="button">New Notebook</button>
         </div>
+
+        <div className="connect-page-content">
+          <button onClick={addItem}>Add Item</button>
+
+          <DndContext>
+            <div className="content" style={{ position: "relative", height: "500px", border: "2px solid gray" }}>
+              {items.map((item) => (
+                <DraggableItem
+                  key={item.id}
+                  id={item.id}
+                  label={item.label}
+                  src={item.src}
+                  onRename={renameItem}
+                />
+              ))}
+            </div>
+          </DndContext>
+        </div>
+
+      </div>
     </main>
-    );
-    }   
+  );
+}
