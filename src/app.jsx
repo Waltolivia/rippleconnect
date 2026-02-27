@@ -28,25 +28,22 @@ export default function App() {
     <BrowserRouter>
       <div className="app">
         <header>
-          <nav>
-            <li><NavLink className="bar-item-button" to="/home">Home</NavLink></li>
-            <li><NavLink className="bar-item-button" to="/notes">Notes</NavLink></li>
-            <li><NavLink className="bar-item-button" to="/connect">Connect</NavLink></li>
-            {authState === AuthState.Authenticated ? (
-              <li>
-                <button
-                  className="new_notebook"
-                  onClick={() => {
-                    setUserName('');
-                    setAuthState(AuthState.Unauthenticated);
-                    localStorage.removeItem('userName');
-                  }}
-                >
-                  Logout
-                </button>
-              </li>
-            ) : null}
-          </nav>
+          <NavLink className="bar-item-button" to="/home">Home</NavLink>
+          <NavLink className="bar-item-button" to="/notes">Notes</NavLink>
+          <NavLink className="bar-item-button" to="/connect">Connect</NavLink>
+
+          {authState === AuthState.Authenticated && (
+            <button
+              className="new_notebook"
+              onClick={() => {
+                setUserName('');
+                setAuthState(AuthState.Unauthenticated);
+                localStorage.removeItem('userName');
+              }}
+            >
+              Logout
+            </button>
+          )}
         </header>
 
         <Routes>
@@ -56,7 +53,7 @@ export default function App() {
         </Routes>
 
         <footer>
-          <p>Your Name</p>
+          <p>Olivia Walton || cs260 Wed Programming</p>
           <a href="https://github.com/Waltolivia/rippleconnect.git">GitHub Repo</a>
         </footer>
 
