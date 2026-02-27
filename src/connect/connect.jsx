@@ -1,15 +1,16 @@
 import React from 'react';
+import {NavLink} from 'react-router-dom';
 
 export function Connect() {
   return (
     <main>
         <div class="page-content">
-            <div class = "notebook_bar">
-                <li><a href="notes.html" class = "bar-item-button">Notebook1</a></li>
-                <li><a href="#" class = "bar-item-button">Notebook2</a></li>
-                <li><a href="#" class = "bar-item-button">Notebook3</a></li>
-                <button class="new_notebook" type="button">New Notebook</button>
-            </div>  
+            <div className="notebook_bar">
+                <li><NavLink to="/notes" className="bar-item-button">Notebook1</NavLink></li>
+                <li><NavLink to="/notes" className="bar-item-button">Notebook2</NavLink></li>
+                <li><NavLink to="/notes" className="bar-item-button">Notebook3</NavLink></li>
+                <button className="new_notebook" type="button">New Notebook</button>
+            </div>
         
         
             <div class="connect-page-content">
