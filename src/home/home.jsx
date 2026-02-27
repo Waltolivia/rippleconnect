@@ -1,15 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { AuthState } from "../authState"; // make sure this file exists
 
-export function Home() {
+export function Home({ userName, authState, onAuthChange }) {
+  const [inputName, setInputName] = useState('');
+
+  const handleLogin = () => {
+    if (!inputName) return; // simple validation
+    localStorage.setItem('userName', inputName); // save for future visits
+    onAuthChange(inputName, AuthState.Authenticated);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('userName');
+    onAuthChange('', AuthState.Unauthenticated);
+  };
+
   return (
     <main>
-    <div class="page-content">
-        <div class = "notebook_bar">
-            <li><a href="notes.html" class = "bar-item-button">Notebook1</a></li>
-            <li><a href="#" class = "bar-item-button">Notebook2</a></li>
-            <li><a href="#" class = "bar-item-button">Notebook3</a></li>
-            <button class="new_notebook" type="button">New Notebook</button>
-        </div>  
+      <div className="page-content">
+
+        <div className="notebook_bar">
+          <li><a href="notes.html" className="bar-item-button">Notebook1</a></li>
+          <li><a href="#" className="bar-item-button">Notebook2</a></li>
+          <li><a href="#" className="bar-item-button">Notebook3</a></li>
+          <button className="new_notebook" type="button">New Notebook</button>
+        </div>
 
         <div className="content">
           <h1>Home</h1>
@@ -27,17 +42,28 @@ export function Home() {
             pages, and sticky notes inside to help you write!
           </p>
 
-          <div className="Login">
-            <form>
+          {authState !== AuthState.Authenticated ? (
+            <div className="Login">
               <label htmlFor="username">Username </label>
-              <input type="text" id="username" name="username" />
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={inputName}
+                onChange={(e) => setInputName(e.target.value)}
+              />
               <br /><br />
-
               <label htmlFor="password">Password</label>
-              <input type="text" id="password" name="password" />
+              <input type="password" id="password" name="password" />
               <br /><br />
-            </form>
-          </div>
+              <button type="button" onClick={handleLogin}>Login</button>
+            </div>
+          ) : (
+            <div>
+              <p>Welcome, {userName}!</p>
+              <button onClick={handleLogout}>Logout</button>
+            </div>
+          )}
 
         </div>
       </div>
