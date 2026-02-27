@@ -12,6 +12,17 @@ function DraggableItem({ id, label, src, onRename }) {
     cursor: "grab"
   };
 
+    return (
+        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <img src={src} alt={label} width="80" />
+        <input
+            value={label}
+            onChange={(e) => onRename(id, e.target.value)}
+            style={{ textAlign: "center" }}
+        />
+        </div>
+    );
+    }
 
 export function Connect() {
 
