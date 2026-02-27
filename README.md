@@ -88,8 +88,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [X] **All functionality implemented or mocked out** - I got the login to work like the one from simon, I got my notebook pages to be created and had my other tools addable, and I got the click and drag spot made in connections
+- [X] **Hooks** - One place I used this in particular is my notes page where I use many useStates in particular to help me change the text box for the notebooks and add new notes. It also allows me to edit the notes when I click into them, it has to be changed into an editor stage so the useStates helps me watch for that. 
 
 ## 🚀 Service deliverable
 
