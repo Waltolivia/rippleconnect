@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import Draggable from "react-draggable";
-
+import { DndContext, useDraggable } from "@dnd-kit/core";
 export function Connect() {
 
       const [items, setItems] = useState([
@@ -20,10 +19,6 @@ export function Connect() {
   };
 
 
-
-
-
-
   return (
     <main>
         <div className="page-content">
@@ -35,24 +30,21 @@ export function Connect() {
             </div>
         
         
-            <div className="connect-page-content">
-                <div className="content">
-                    <img src="images/download.png" alt="Blue Links"/>
-                    <div className="icon-item">
-                        <img src="images/starryexampleimg.png" alt="Blue Links"/>
-                        <h4>Starry Night</h4>
+        <div className="connect-page-content">
+            <button onClick={addItem}>Add Item</button>
+
+            <div className="content" style={{ position: "relative", height: "500px", border: "2px solid gray", }}>
+                {items.map((item) => (
+                <Draggable key={item.id} defaultPosition={{ x: item.x, y: item.y }}>
+                    <div style={{ position: "absolute", textAlign: "center", cursor: "move",}}>
+                    <img src={item.src} alt={item.label} width="80"/>
+                    <input value={item.label} onChange={(e) => renameItem(item.id, e.target.value)} style={{ textAlign: "center" }}/>
                     </div>
-                    <div className="icon-item">
-                        <img src="images/documenticon.png" alt="Document Icon"/>
-                        <h4>Notebook1</h4>
-                    </div>
-                    <div className="icon-item">
-                        <img src="images/documenticon.png" alt="Document Icon"/>
-                        <h4>Sticky Note</h4>
-                    </div>
-                </div>
+                </Draggable>
+                ))}
+            </div>
             </div>
         </div>
     </main>
-  );
-}
+    );
+    }   
