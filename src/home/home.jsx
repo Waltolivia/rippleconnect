@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { AuthState } from "../authState"; // make sure this file exists
+import { AuthState } from "../authState"; 
+import {NavLink} from 'react-router-dom';
 
 export function Home({ userName, authState, onAuthChange }) {
   const [inputName, setInputName] = useState('');
 
   const handleLogin = () => {
-    if (!inputName) return; // simple validation
-    localStorage.setItem('userName', inputName); // save for future visits
+    if (!inputName) return; 
+    localStorage.setItem('userName', inputName);
     onAuthChange(inputName, AuthState.Authenticated);
   };
 
@@ -20,9 +21,9 @@ export function Home({ userName, authState, onAuthChange }) {
       <div className="page-content">
 
         <div className="notebook_bar">
-          <li><a href="notes.html" className="bar-item-button">Notebook1</a></li>
-          <li><a href="#" className="bar-item-button">Notebook2</a></li>
-          <li><a href="#" className="bar-item-button">Notebook3</a></li>
+          <li><NavLink to="/notes" className="bar-item-button">Notebook1</NavLink></li>
+          <li><NavLink to="/notes" className="bar-item-button">Notebook2</NavLink></li>
+          <li><NavLink to="/notes" className="bar-item-button">Notebook3</NavLink></li>
           <button className="new_notebook" type="button">New Notebook</button>
         </div>
 
