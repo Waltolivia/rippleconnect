@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { DndContext, useDraggable } from "@dnd-kit/core";
+
+function DraggableItem({ id, label, src, onRename }) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+
+  const style = {
+    position: "absolute",
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    textAlign: "center",
+    cursor: "grab"
+  };
+
+
 export function Connect() {
 
       const [items, setItems] = useState([
