@@ -17,9 +17,9 @@ function DraggableItem({ id, label, src, x, y, onRename }) {
 
 export function Connect() {
   const [items, setItems] = useState([
-    { id: "1", label: "Starry Night", src: "images/starryexampleimg.png", x: 50, y: 50 },
-    { id: "2", label: "Notebook1", src: "images/documenticon.png", x: 200, y: 100 },
-    { id: "3", label: "Sticky Note", src: "images/documenticon.png", x: 350, y: 150 }
+    { id: "1", label: "Starry Night", src: "dist/starryexampleimg.png", x: 50, y: 50 },
+    { id: "2", label: "Notebook1", src: "dist/documenticon.png", x: 200, y: 100 },
+    { id: "3", label: "Sticky Note", src: "dist/documenticon.png", x: 350, y: 150 }
   ]);
 
 

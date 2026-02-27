@@ -33,7 +33,7 @@ export function Home({ userName, authState, onAuthChange }) {
             This is a place to make connections, let ideas flow, and let colors help you learn or write what you need to!
           </h3>
 
-          <img src="/images/download.png" alt="Blue Links" />
+          <img src="dist/download.png" alt="Blue Links" />
 
           <h2>Start a New Note</h2>
           <button className="button_start">Start Here</button>

@@ -144,7 +144,7 @@ export function Notes() {
               <div className="index-card">
                 {indexes.map(index => (
                   <div key={index.id} className="Index-note" onClick={() => setSelectedIndexId(index.id)}>
-                  <img src="/images/starryexampleimg.png" alt="Blue Links" width="250" />
+                  <img src="dist/starryexampleimg.png" alt="Blue Links" width="250" />
                     {selectedIndexId === index.id ? (
                       <textarea value={index.text || ""} onChange={(e) => updateIndexText(e.target.value)} onBlur={() => setSelectedIndexId(null)} placeholder="Type your notes here..." rows={5} cols={15} autoFocus />
                     ) : (
