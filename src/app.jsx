@@ -9,19 +9,9 @@ import { Notes } from './notes/notes';
 import { Connect } from './connect/connect';
 
 export default function App() {
-  const [authState, setAuthState] = useState(AuthState.Unknown);
-  const [userName, setUserName] = useState('');
-
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('userName');
-    if (storedUser) {
-      setUserName(storedUser);
-      setAuthState(AuthState.Authenticated);
-    } else {
-      setAuthState(AuthState.Unauthenticated);
-    }
-  }, []);
+  const [authState, setAuthState] = React.useState(currentAuthState);
+  const [userName, setUserName] = React.useState(localStorage.getItem('username)' || ''));
+  const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
 
 
   return (
@@ -29,21 +19,19 @@ export default function App() {
       <div className="app">
         <header>
           <NavLink className="bar-item-button" to="/home">Home</NavLink>
-          <NavLink className="bar-item-button" to="/notes">Notes</NavLink>
-          <NavLink className="bar-item-button" to="/connect">Connect</NavLink>
-
+          
+          {authState === AuthState.Authenticaed && (
+            <NavLink className="bar-item-button" to="/notes">
+              Notes
+              </NavLink>
+          )};
           {authState === AuthState.Authenticated && (
-            <button
-              className="new_notebook"
-              onClick={() => {
-                setUserName('');
-                setAuthState(AuthState.Unauthenticated);
-                localStorage.removeItem('userName');
-              }}
-            >
-              Logout
-            </button>
-          )}
+            <NavLink className="bar-item-button" to="/connect">
+              Connect
+              </NavLink>
+          )};
+
+
         </header>
 
         <Routes>
