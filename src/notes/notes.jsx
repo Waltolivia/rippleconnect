@@ -115,10 +115,10 @@ export function Notes() {
   }
 
   function updatedNoteText(value) {
-    const updated = notes.map(note => note.id === selectedNoteId ? { 
-      ...note, text: value }: note);
-    setNotes(updated)
-  }
+    const updatedNote = {...selectedNote, text: value};}
+    const updated = notes.map(note => note.id === selectedNoteId ? updatedNote : note);
+    setNotes(updated);
+    NotesNotifier.broadcastEvent("user", NoteEvent.update, updatedNote);
 
 
   function updateStickyText(value) {
