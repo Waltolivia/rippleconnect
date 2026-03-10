@@ -16,7 +16,29 @@ class EventMessage {
 }
 
 class NotesEventNotifier {
+    events = [];
+  handlers = [];
 
+  broadcastEvent(from, type, value) {
+    const event = new EventMessage(from, type, value);
+    this.receiveEvent(event);
+  }
+
+  addHandler(handler) {
+    this.handlers.push(handler);
+  }
+
+  removeHandler(handler) {
+    this.handlers = this.handlers.filter((h) => h !== handler);
+  }
+
+  receiveEvent(event) {
+    this.events.push(event);
+
+    this.handlers.forEach((handler) => {
+      handler(event);
+        });
+    }
 }
 
 export{ NoteEvent, NotesNotifier };

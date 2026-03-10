@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {NavLink} from 'react-router-dom';
+import { NotesNotifier, NoteEvent } from "../notesNotifier";
 
 
 export function Notes() {
@@ -51,6 +52,33 @@ export function Notes() {
     localStorage.setItem("indexes", JSON.stringify(indexes));
   }, [indexes])
   
+  useEffect(() => {
+    const handleEvent = (event) => {
+      if (event.type === NotesEvent.Add) {
+        setNotes((prev) => [...prev, event.value]);
+      }
+      if(event.type === NoteEvent.Update) {
+        setNotes((prev) =>
+        prev.map((note) =>
+      note.id === event.value.id ? event.value : note));
+      }
+      if (event.type === NoteEvent.StickyUpdate) {
+        setIndexes((prev) =>
+        prev.map((sticky) =>
+        sticky.id === event.value.id ? event.value : sticky));
+      }
+      if (event.type === NoteEvent.IndexUpdate) {
+        setIndexes((prev) =>
+        prev.map((index) =>
+        index.id === event.value.id ? event.value : index));
+      }
+    };
+    NotesNotifier.addHandler(handleEvent);
+
+    return () => {
+      NotesNotifier.removeHandler(handleEvent);
+    };
+  }, []);
 
 
   function addNote() {
@@ -61,6 +89,7 @@ export function Notes() {
     };
 
     setNotes([...notes, newNote]);
+    NotesNotifier.broadcastEvent("user", NoteEvent.Add, newNote);
     setSelectedNoteId(newNote.id);
     setTitle("");
     setText("");
