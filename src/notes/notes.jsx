@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {NavLink} from 'react-router-dom';
-import { NotesNotifier, NoteEvent } from "../notesNotifier";
+import { NotesNotifier, NoteEvent } from "./notesNotifier";
 
 
 export function Notes() {
@@ -122,15 +122,17 @@ export function Notes() {
 
 
   function updateStickyText(value) {
-    const updated = stickies.map(sticky => sticky.id === selectedStickyId ? {
-      ...sticky, text: value } : sticky);
+    const updatedSticky = {...selectedSticky, text: value};
+    const updated = stickies.map(sticky => sticky.id === selectedStickyId ? {...sticky, text: value } : sticky);
     setStickies(updated)
+    NotesNotifier.broadcastEvent("user", NoteEvent.StickyUpdate, updatedSticky);
   }
 
   function updateIndexText(value){
-    const updated = indexes.map(index => index.id === selectedIndexId ? {
-      ...index, text: value }: index);
-      setIndexes(updated)
+    const updatedIndex = {...selectedIndex, text: value};
+    const updated = indexes.map(index => index.id === selectedIndexId ? {...index, text: value }: index);
+    setIndexes(updated)
+    NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
   }
 
 
@@ -177,7 +179,7 @@ export function Notes() {
                     {selectedIndexId === index.id ? (
                       <textarea value={index.text || ""} onChange={(e) => updateIndexText(e.target.value)} onBlur={() => setSelectedIndexId(null)} placeholder="Type your notes here..." rows={5} cols={15} autoFocus />
                     ) : (
-                      <p>{indexes.text || "Click to edit..."}</p>)}
+                      <p>{index.text || "Click to edit..."}</p>)}
                       </div>
                     ))}
               </div>
