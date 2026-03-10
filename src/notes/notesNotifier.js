@@ -5,7 +5,6 @@ const NoteEvent = {
   IndexUpdate: "indexUpdate",
 };
 
-const NotesNotifier = new NotesEventNotifier();
 
 class EventMessage {
   constructor(from, type, value) {
@@ -40,5 +39,7 @@ class NotesEventNotifier {
         });
     }
 }
+
+const NotesNotifier = new NotesEventNotifier();
 
 export{ NoteEvent, NotesNotifier };

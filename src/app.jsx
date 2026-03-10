@@ -19,7 +19,7 @@ function App() {
     <BrowserRouter>
       <div className="app">
         <header>
-          <NavLink className="bar-item-button" to="/login">
+          <NavLink className="bar-item-button" to="/">
             Login
           </NavLink>
 
