@@ -4,11 +4,12 @@ import './app.css';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 
 import { AuthState } from './authState';
+import { Login } from './login/login';
 import { Home } from './home/home';
 import { Notes } from './notes/notes';
 import { Connect } from './connect/connect';
 
-export default function App() {
+function App() {
   const [authState, setAuthState] = React.useState(currentAuthState);
   const [userName, setUserName] = React.useState(localStorage.getItem('username)' || ''));
   const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
@@ -18,7 +19,15 @@ export default function App() {
     <BrowserRouter>
       <div className="app">
         <header>
-          <NavLink className="bar-item-button" to="/home">Home</NavLink>
+          <NavLink className="bar-item-button" to="/login">
+          Login
+          </NavLink>
+
+          {authState === AuthState.Authenticated && (
+            <NavLink className="bar-item-button" to="/home">
+              Home
+              </NavLink>
+          )};
           
           {authState === AuthState.Authenticaed && (
             <NavLink className="bar-item-button" to="/notes">
@@ -35,9 +44,24 @@ export default function App() {
         </header>
 
         <Routes>
-          <Route path="/home" element={<Home userName={userName} authState={authState} onAuthChange={(name, state) => { setUserName(name); setAuthState(state);}} />} />
-          <Route path="/notes" element={<Notes />} />
-          <Route path="/connect" element={<Connect />} />
+          <Route
+            path='/'
+            element={
+              <Login
+                userName={userName}
+                authState={authState}
+                onAuthChange={(userName, authState) => {
+                  setAuthState(authState);
+                  setUserName(userName);
+                }}
+              />
+            }
+            exact
+          />
+          <Route path='/home' element={<Home userName={userName} />} />
+          <Route path='/notes' element={<Notes />} />
+          <Route path='/connect' element={<Connect />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
 
         <footer>
@@ -49,3 +73,9 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+function NotFound(){
+  return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
+}
+
+export default App;
