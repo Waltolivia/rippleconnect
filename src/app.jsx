@@ -10,9 +10,9 @@ import { Notes } from './notes/notes';
 import { Connect } from './connect/connect';
 
 function App() {
-  const [authState, setAuthState] = React.useState(currentAuthState);
-  const [userName, setUserName] = React.useState(localStorage.getItem('username)' || ''));
+  const [userName, setUserName] = React.useState(localStorage.getItem('username') || '');
   const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
+  const [authState, setAuthState] = React.useState(currentAuthState);
 
 
   return (
@@ -20,28 +20,27 @@ function App() {
       <div className="app">
         <header>
           <NavLink className="bar-item-button" to="/login">
-          Login
+            Login
           </NavLink>
 
           {authState === AuthState.Authenticated && (
             <NavLink className="bar-item-button" to="/home">
               Home
-              </NavLink>
-          )};
-          
-          {authState === AuthState.Authenticaed && (
+            </NavLink>
+          )}
+
+          {authState === AuthState.Authenticated && (
             <NavLink className="bar-item-button" to="/notes">
               Notes
-              </NavLink>
-          )};
+            </NavLink>
+          )}
+
           {authState === AuthState.Authenticated && (
             <NavLink className="bar-item-button" to="/connect">
               Connect
-              </NavLink>
-          )};
-
-
-        </header>
+            </NavLink>
+          )}
+      </header>
 
         <Routes>
           <Route
