@@ -23,11 +23,9 @@ function App() {
             Login
           </NavLink>
 
-          {authState === AuthState.Authenticated && (
-            <NavLink className="bar-item-button" to="/home">
-              Home
-            </NavLink>
-          )}
+          <NavLink className="bar-item-button" to="/home">
+            Home
+          </NavLink>
 
           {authState === AuthState.Authenticated && (
             <NavLink className="bar-item-button" to="/notes">
@@ -57,9 +55,52 @@ function App() {
             }
             exact
           />
-          <Route path='/home' element={<Home userName={userName} />} />
-          <Route path='/notes' element={<Notes />} />
-          <Route path='/connect' element={<Connect />} />
+          <Route 
+            path='/home' 
+            element={
+              <Home 
+                userName={userName}
+                authState={authState}
+                onAuthChange={(userName, authState) => 
+                  {setAuthState(authState); 
+                  setUserName(userName);
+                }} 
+              />} 
+            />
+          <Route
+            path="/notes"
+            element={
+              authState === AuthState.Authenticated ? (
+                <Notes />
+              ) : (
+                <Login
+                  userName={userName}
+                  authState={authState}
+                  onAuthChange={(userName, authState) => {
+                    setAuthState(authState);
+                    setUserName(userName);
+                  }}
+                />
+              )
+            }
+          />
+          <Route
+            path="/connect"
+            element={
+              authState === AuthState.Authenticated ? (
+                <Connect />
+              ) : (
+                <Login
+                  userName={userName}
+                  authState={authState}
+                  onAuthChange={(userName, authState) => {
+                    setAuthState(authState);
+                    setUserName(userName);
+                  }}
+                />
+              )
+            }
+          />``
           <Route path='*' element={<NotFound />} />
         </Routes>
 

@@ -43,28 +43,6 @@ export function Home({ userName, authState, onAuthChange }) {
             pages, and sticky notes inside to help you write!
           </p>
 
-          {authState !== AuthState.Authenticated ? (
-            <div className="Login">
-              <label htmlFor="username">Username </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={inputName}
-                onChange={(e) => setInputName(e.target.value)}
-              />
-              <br /><br />
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" name="password" />
-              <br /><br />
-              <button type="button" onClick={handleLogin}>Login</button>
-            </div>
-          ) : (
-            <div>
-              <p>Welcome, {userName}!</p>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          )}
 
         </div>
       </div>
