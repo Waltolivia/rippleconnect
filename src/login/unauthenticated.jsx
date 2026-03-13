@@ -21,6 +21,7 @@ export function Unauthenticated(props) {
         method: 'post',
         body: JSON.stringify({ email: userName, password }),
         headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+        credentials: 'include',
       })
 
       if (response.ok) {
