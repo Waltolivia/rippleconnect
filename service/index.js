@@ -1,13 +1,12 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
-const bcrypt = require('bcryptjs')
-const { v4: uuidv4 } = require('uuid')
+
 
 const app = express()
 const authCookieName = 'token'
 
 let users = []
-let scores = []
+let notes = []
 
 const port = process.argv.length > 2 ? Number(process.argv[2]) : 4000
 
@@ -52,10 +51,18 @@ async function verifyAuth(req, res, next) {
   return res.status(401).send({ msg: 'Unauthorized' })
 }
 
-apiRouter.get('/scores', verifyAuth, (_req, res) => res.send(scores))
-apiRouter.post('/score', verifyAuth, (req, res) => {
-  scores = updateScores(req.body || {})
-  res.send(scores)
+apiRouter.get('/notes', verifyAuth, (_req, res) => {
+  res.send(notes)
+})
+
+apiRouter.post('/notes', verifyAuth, (req, res) => {
+  const note = req.body
+  if (!note || !note.text) {
+    return res.status(400).send({ msg: 'Note text required' })
+  }
+
+  notes.push(note)
+  res.send(notes)
 })
 
 app.use((err, _req, res, _next) => {
@@ -88,19 +95,5 @@ function setAuthCookie(res, token) {
   })
 }
 
-function updateScores(newScore) {
-  if (typeof newScore?.score !== 'number') return scores
-  let inserted = false
-  for (let i = 0; i < scores.length; i += 1) {
-    if (newScore.score > scores[i].score) {
-      scores.splice(i, 0, newScore)
-      inserted = true
-      break
-    }
-  }
-  if (!inserted) scores.push(newScore)
-  if (scores.length > 10) scores.length = 10
-  return scores
-}
 
 app.listen(port, () => console.log(`Backend listening on port ${port}`))
