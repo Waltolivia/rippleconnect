@@ -15,6 +15,11 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.static('public'))
 
+app.use((req, res, next) => {   //debugger
+  console.log(`${req.method} ${req.url}`)
+  next()
+})
+
 const apiRouter = express.Router()
 app.use('/api', apiRouter)
 
@@ -29,6 +34,7 @@ apiRouter.post('/auth/create', async (req, res) => {
 })
 
 apiRouter.post('/auth/login', async (req, res) => {
+  console.log('/auth/login reached')
   const { email, password } = req.body || {}
   if (!email || !password) return res.status(400).send({ msg: 'Missing email or password' })
   const user = await findUser('email', email)
@@ -37,7 +43,6 @@ apiRouter.post('/auth/login', async (req, res) => {
     setAuthCookie(res, user.token)
     return res.send({ email: user.email })
   }
-  console.log('/auth/login reached')
   return res.status(401).send({ msg: 'Unauthorized' })
 })
 

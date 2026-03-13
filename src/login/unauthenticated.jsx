@@ -7,12 +7,12 @@ export function Unauthenticated(props) {
   const [password, setPassword] = useState('')
   const [displayError, setDisplayError] = useState(null)
 
-  async function loginUser() {
-    loginOrCreate('/api/auth/login')
+  function loginUser() {
+    props.onLogin(userName, password);
   }
 
-  async function createUser() {
-    loginOrCreate('/api/auth/create')
+  function createUser() {
+    props.onRegister(userName, password);
   }
 
   async function loginOrCreate(endpoint) {
