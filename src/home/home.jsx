@@ -4,6 +4,8 @@ import {NavLink} from 'react-router-dom';
 
 export function Home({ userName, authState, onAuthChange }) {
   const [inputName, setInputName] = useState('');
+  const[quote, setQuote] = useState("Loading...");
+  const [quoteAuthor, setQuoteAuthor] = useState("Unknown");
 
   const handleLogin = () => {
     if (!inputName) return; 
@@ -15,6 +17,20 @@ export function Home({ userName, authState, onAuthChange }) {
     localStorage.removeItem('userName');
     onAuthChange('', AuthState.Unauthenticated);
   };
+
+
+  React.useEffect(() => {
+    fetch("https://quote.cs260.click")
+      .then((response) => response.json())
+      .then((data) => {
+        setQuote(data.quote);
+        setQuoteAuthor(data.author);
+      })
+      .catch(() => {
+        setQuote("Failed to load quote.");
+        setQuoteAuthor("");
+      });
+  }, []);
 
   return (
     <main>
@@ -44,6 +60,10 @@ export function Home({ userName, authState, onAuthChange }) {
             pages, and sticky notes inside to help you write!
           </p>
 
+          <div className="quote-box">
+            <p className="quote">"{quote}"</p>
+            <p className="author">— {quoteAuthor}</p>
+          </div>
 
         </div>
       </div>

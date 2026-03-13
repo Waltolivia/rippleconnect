@@ -99,8 +99,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [X] **Static middleware for frontend** - I use express.static to connect public
 - [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
 - [X] **Backend service endpoints** - I use apiRouters to connect my login, create, logout and other items
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
+- [X] **Frontend calls service endpoints** - I use the front end and backend connections to save notes like stick ynotes and notebooks, along with saving passwords and usernames.
+- [X] **Supports registration, login, logout, and restricted endpoint** - My app is able to sign in, create, and logout fluidly.
 
 ## 🚀 DB deliverable
 
