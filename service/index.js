@@ -1,7 +1,11 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
+<<<<<<< ours
 const uuid = require('uuid');
+=======
+const { v4: uuidv4 } = require('uuid');
+>>>>>>> theirs
 
 const app = express();
 const authCookieName = 'token';
