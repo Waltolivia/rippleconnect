@@ -8,11 +8,15 @@ export function Unauthenticated(props) {
   const [displayError, setDisplayError] = useState(null)
 
   async function loginUser() {
-    loginOrCreate('/api/auth/login')
+    await loginOrCreate('/api/auth/login')
   }
 
   async function createUser() {
-    loginOrCreate('/api/auth/create')
+    const created = await loginOrCreate('/api/auth/create')
+    if (created) {
+      // Auto-login after creation
+      await loginOrCreate('/api/auth/login')
+    }
   }
 
   async function loginOrCreate(endpoint) {
@@ -27,13 +31,15 @@ export function Unauthenticated(props) {
       if (response.ok) {
         localStorage.setItem('userName', userName)
         props.onAuthChange(userName, true)
-        return
+        return true
       }
 
       const body = await response.json().catch(() => ({}))
       setDisplayError(`⚠ Error: ${body.msg ?? 'Unable to reach the backend service.'}`)
+      return false
     } catch {
       setDisplayError('⚠ Error: Unable to reach the backend service.')
+      return false
     }
   }
 
