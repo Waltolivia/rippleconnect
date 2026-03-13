@@ -37,6 +37,7 @@ apiRouter.post('/auth/login', async (req, res) => {
     setAuthCookie(res, user.token)
     return res.send({ email: user.email })
   }
+  console.log('/auth/login reached')
   return res.status(401).send({ msg: 'Unauthorized' })
 })
 
@@ -50,6 +51,7 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 async function verifyAuth(req, res, next) {
   const user = await findUser('token', req.cookies?.[authCookieName])
   if (user) return next()
+    console.log('verifyauth?')
   return res.status(401).send({ msg: 'Unauthorized' })
 }
 
