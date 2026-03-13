@@ -19,6 +19,7 @@ export function Notes() {
   const [notifications, setNotifications] = useState([]);
   const [selectedNotebookId, setSelectedNotebookId] = useState(null);
   const [editingNotebookId, setEditingNotebookId] = useState(null);
+  
 
 
   // Use Effects
@@ -123,6 +124,30 @@ export function Notes() {
       };
     }, []);
 
+    useEffect(() => {
+      if (selectedNotebookId) {
+        localStorage.setItem("selectedNotebookId", selectedNotebookId);
+      }
+    }, [selectedNotebookId]);
+
+    useEffect(() => {
+      const savedNotebook = localStorage.getItem("selectedNotebookId");
+      if (savedNotebook) {
+        setSelectedNotebookId(Number(savedNotebook));
+      }
+    }, []);
+
+    useEffect(() => {
+      const saved = localStorage.getItem("notebooks");
+      if (saved) {
+        setNotebooks(JSON.parse(saved));
+      }
+    }, []);
+
+    useEffect(() => {
+      localStorage.setItem("notebooks", JSON.stringify(notebooks));
+    }, [notebooks]);
+
 
     //functions
 
@@ -139,11 +164,14 @@ export function Notes() {
         text: text
       };
 
-  setNotes([...notes, newNote]);
-  setSelectedNoteId(newNote.id);
+      setNotes([...notes, newNote]);
+      setSelectedNoteId(newNote.id);
 
-  addNotification(`📝 Note added to Notebook`);
-}
+      setTitle("");
+      setText("");
+
+      addNotification(`📝 Note added to Notebook`);
+    }
 
   function addSticky() {
     const newSticky = {
@@ -164,13 +192,15 @@ export function Notes() {
     setSelectedIndexId(newIndex.id);
   }
 
-  function updatedNoteText(value) {
-    const updatedNote = { ...selectedNote, text: value };
-    const updated = notes.filter(note => note.notebookId === selectedNotebookId).map(note => 
-      note.id === selectedNoteId ? updatedNote : note);
-    setNotes(updated);
-    NotesNotifier.broadcastEvent("user", NoteEvent.Update, updatedNote);
-  }
+    function updatedNoteText(value) {
+      const updatedNote = { ...selectedNote, text: value };
+      const updated = notes.map(note =>
+        note.id === selectedNoteId ? updatedNote : note
+      );
+      setNotes(updated);
+      NotesNotifier.broadcastEvent("user", NoteEvent.Update, updatedNote);
+    }
+
     function updateStickyText(value) {
       const updatedSticky = {...selectedSticky, text: value};
       const updated = stickies.map(sticky => sticky.id === selectedStickyId ? {...sticky, text: value } : sticky);
@@ -240,14 +270,14 @@ export function Notes() {
                   onBlur={() => setEditingNotebookId(null)}
                 />
               ) : (
-                <NavLink
-                  to="/notes"
-                  className="bar-item-button"
-                  onClick={() => setSelectedNotebookId(notebook.id)}
-                  onDoubleClick={() => setEditingNotebookId(notebook.id)}
-                >
-                  {notebook.name}
-                </NavLink>
+              <NavLink
+                to="/notes"
+                className={`bar-item-button ${selectedNotebookId === notebook.id ? "selected-notebook" : ""}`}
+                onClick={() => setSelectedNotebookId(notebook.id)}
+                onDoubleClick={() => setEditingNotebookId(notebook.id)}
+              >
+                {notebook.name}
+              </NavLink>
               )}
             </li>
           ))}

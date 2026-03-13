@@ -198,6 +198,12 @@ header .bar-item-button {
 }
 
 
+.selected-notebook {
+  background-color: #d0e6ff;
+  border-left: 4px solid #2b6cb0;
+  font-weight: bold;
+}
+
 
 
 /* connect page css */
