@@ -10,7 +10,7 @@ import { Notes } from './notes/notes';
 import { Connect } from './connect/connect';
 
 function App() {
-  const [userName, setUserName] = React.useState(localStorage.getItem('username') || '');
+  const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
   const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
   const [authState, setAuthState] = React.useState(currentAuthState);
 
@@ -100,7 +100,7 @@ function App() {
                 />
               )
             }
-          />``
+          />
           <Route path='*' element={<NotFound />} />
         </Routes>
 

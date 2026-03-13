@@ -9,10 +9,12 @@ export function Unauthenticated(props) {
   const [displayError, setDisplayError] = React.useState(null);
 
   async function loginUser() {
+    console.log("Create clicked");
     loginOrCreate(`/api/auth/login`);
   }
 
   async function createUser() {
+    console.log("Login clicked");
     loginOrCreate(`/api/auth/create`);
   }
 
