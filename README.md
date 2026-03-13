@@ -97,7 +97,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [X] **Node.js/Express HTTP service** - I use express app to lsiten on port 4000.
 - [X] **Static middleware for frontend** - I use express.static to connect public
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
+- [X] **Calls to third party endpoints** - I got the third party connection for quotes on the front page
 - [X] **Backend service endpoints** - I use apiRouters to connect my login, create, logout and other items
 - [X] **Frontend calls service endpoints** - I use the front end and backend connections to save notes like stick ynotes and notebooks, along with saving passwords and usernames.
 - [X] **Supports registration, login, logout, and restricted endpoint** - My app is able to sign in, create, and logout fluidly.
