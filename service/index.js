@@ -1,8 +1,9 @@
-const express = require('express')
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
+const express = require('express');
+const uuid = require('uuid');
+const app = express();
 
-
-const app = express()
 const authCookieName = 'token'
 
 let users = []
@@ -23,6 +24,7 @@ apiRouter.post('/auth/create', async (req, res) => {
   if (await findUser('email', email)) return res.status(409).send({ msg: 'Existing user' })
   const user = await createUser(email, password)
   setAuthCookie(res, user.token)
+  console.log('/auth/create reached')
   return res.send({ email: user.email })
 })
 
@@ -31,7 +33,7 @@ apiRouter.post('/auth/login', async (req, res) => {
   if (!email || !password) return res.status(400).send({ msg: 'Missing email or password' })
   const user = await findUser('email', email)
   if (user && (await bcrypt.compare(password, user.password))) {
-    user.token = uuidv4()
+    user.token = uuid.v4()
     setAuthCookie(res, user.token)
     return res.send({ email: user.email })
   }
@@ -76,7 +78,8 @@ app.use((_req, res) => {
 
 async function createUser(email, password) {
   const passwordHash = await bcrypt.hash(password, 10)
-  const user = { email, password: passwordHash, token: uuidv4() }
+  console.log('create user function reached')
+  const user = { email, password: passwordHash, token: uuid.v4() }
   users.push(user)
   return user
 }

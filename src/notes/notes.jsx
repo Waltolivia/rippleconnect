@@ -114,13 +114,13 @@ export function Notes() {
     setSelectedIndexId(newIndex.id);
   }
 
-  function updatedNoteText(value) {
-    const updatedNote = {...selectedNote, text: value};}
-    const updated = notes.map(note => note.id === selectedNoteId ? updatedNote : note);
-    setNotes(updated);
-    NotesNotifier.broadcastEvent("user", NoteEvent.update, updatedNote);
-
-
+function updatedNoteText(value) {
+  const updatedNote = { ...selectedNote, text: value };
+  const updated = notes.map(note =>
+    note.id === selectedNoteId ? updatedNote : note);
+  setNotes(updated);
+  NotesNotifier.broadcastEvent("user", NoteEvent.Update, updatedNote);
+}
   function updateStickyText(value) {
     const updatedSticky = {...selectedSticky, text: value};
     const updated = stickies.map(sticky => sticky.id === selectedStickyId ? {...sticky, text: value } : sticky);

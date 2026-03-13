@@ -36,7 +36,9 @@ export function Home({ userName, authState, onAuthChange }) {
           <img src="/download.png" alt="Blue Links" />
 
           <h2>Start a New Note</h2>
-          <button className="button_start">Start Here</button>
+          <NavLink to={authState === AuthState.Authenticated ? "/notes" : "/"}>
+            <button className="button_start">Start Here</button>
+          </NavLink>
 
           <p>
             Notebooks are the home to your ideas and connections. Start one and use the notes,
