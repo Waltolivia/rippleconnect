@@ -1,39 +1,38 @@
-import React from 'react';
-import Button from 'react-bootstrap/Button';
-import { MessageDialog } from './messageDialog';
+import React, { useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import { MessageDialog } from './messageDialog'
 
 export function Unauthenticated(props) {
-  const [userName, setUserName] = React.useState(props.userName || '');
-  const [password, setPassword] = React.useState('');
-  const [displayError, setDisplayError] = React.useState(null);
+  const [userName, setUserName] = useState(props.userName || '')
+  const [password, setPassword] = useState('')
+  const [displayError, setDisplayError] = useState(null)
 
   async function loginUser() {
-    console.log("Login clicked");
-    loginOrCreate('/api/auth/login');
+    loginOrCreate('/api/auth/login')
   }
 
   async function createUser() {
-    console.log("Create clicked");
-    loginOrCreate('/api/auth/create');
+    loginOrCreate('/api/auth/create')
   }
 
   async function loginOrCreate(endpoint) {
     try {
       const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+        method: 'post',
         body: JSON.stringify({ email: userName, password }),
-      });
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      })
 
       if (response.ok) {
-        localStorage.setItem('userName', userName);
-        props.onLogin(userName);
-      } else {
-        const body = await response.json().catch(() => ({}));
-        setDisplayError(`⚠ Error: ${body.msg || response.statusText}`);
+        localStorage.setItem('userName', userName)
+        props.onAuthChange(userName, true)
+        return
       }
-    } catch (err) {
-      setDisplayError(`⚠ Error: ${err.message}`);
+
+      const body = await response.json().catch(() => ({}))
+      setDisplayError(`⚠ Error: ${body.msg ?? 'Unable to reach the backend service.'}`)
+    } catch {
+      setDisplayError('⚠ Error: Unable to reach the backend service.')
     }
   }
 
@@ -55,11 +54,11 @@ export function Unauthenticated(props) {
           <input
             className="form-control"
             type="password"
+            value={password}
             onChange={e => setPassword(e.target.value)}
             placeholder="password"
           />
         </div>
-
         <Button variant="primary" onClick={loginUser} disabled={!userName || !password}>
           Login
         </Button>
@@ -70,5 +69,5 @@ export function Unauthenticated(props) {
 
       <MessageDialog message={displayError} onHide={() => setDisplayError(null)} />
     </>
-  );
+  )
 }
