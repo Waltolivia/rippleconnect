@@ -5,11 +5,12 @@ const { v4: uuidv4 } = require('uuid')
 
 const app = express()
 const authCookieName = 'token'
+app.use(express.static('public'));
 
 let users = []
 let scores = []
 
-const port = process.argv.length > 2 ? Number(process.argv[2]) : 3000
+const port = process.argv.length > 2 ? Number(process.argv[2]) : 4000
 
 app.use(express.json())
 app.use(cookieParser())
