@@ -71,7 +71,7 @@ function App() {
             path="/notes"
             element={
               authState === AuthState.Authenticated ? (
-                <Notes />
+                <Notes authState={authState} userName={userName} />
               ) : (
                 <Login
                   userName={userName}

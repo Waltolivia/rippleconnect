@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {NavLink} from 'react-router-dom';
 import { NotesNotifier, NoteEvent } from "./notesNotifier";
+import { AuthState } from "../authState";
 
 
-export function Notes() {
+export function Notes({ authState, userName}) {
     const [notes, setNotes] = useState(() => {
     const saved = localStorage.getItem("notes");
     return saved ? JSON.parse(saved) : [];
@@ -38,6 +39,26 @@ export function Notes() {
   const [editingNotebookId, setEditingNotebookId] = useState(null);
 
   // Use Effects
+
+    useEffect(() => {
+      async function loadNotes() {
+        try {
+          const res = await fetch("/api/notes");
+          if (res.ok) {
+            const data = await res.json();
+            setNotes(data);
+          } else {
+            console.error("Failed to fetch notes", res.status);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      if (authState === AuthState.Authenticated) {
+        loadNotes();
+      }
+    }, [authState]);
 
   useEffect(() => {     //save notes when they change
     localStorage.setItem("notes", JSON.stringify(notes));
@@ -146,7 +167,11 @@ export function Notes() {
       };
     }, [notes, stickies, indexes, notebooks, selectedNotebookId]);
 
-
+    useEffect(() => {
+      if (authState === AuthState.Authenticated) {
+        loadNotes();
+      }
+    }, [authState]);
 
     //functions
 
@@ -160,15 +185,14 @@ export function Notes() {
         id: Date.now(),
         notebookId: selectedNotebookId,
         title: title,
-        text: text
+        text: text || "New note..."   // <-- fix
       };
 
-      setNotes([...notes, newNote]);
-      setSelectedNoteId(newNote.id);
+      saveNoteBackend(newNote);
 
+      setSelectedNoteId(newNote.id);
       setTitle("");
       setText("");
-
       addNotification(`📝 Note added to Notebook`);
     }
 
@@ -274,6 +298,42 @@ export function Notes() {
       );
 
       setNotebooks(updated);
+    }
+
+    async function loadNotes() {
+      try {
+        const res = await fetch("/api/notes", {
+          credentials: "include"
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setNotes(data);
+        } else {
+          console.error("Failed to fetch notes", res.status);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function saveNoteBackend(note) {
+      try {
+        const res = await fetch("/api/notes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(note),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setNotes(data);
+        } else {
+          const err = await res.json();
+          alert(`Error saving note: ${err.msg}`);
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
 
 
