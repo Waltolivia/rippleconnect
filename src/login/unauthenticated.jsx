@@ -8,38 +8,35 @@ export function Unauthenticated(props) {
   const [displayError, setDisplayError] = useState(null)
 
   async function loginUser() {
-    await loginOrCreate('/api/auth/login')
+    loginOrCreate('/api/auth/login')
   }
 
   async function createUser() {
-    const created = await loginOrCreate('/api/auth/create')
-    if (created) {
-      // Auto-login after creation
-      await loginOrCreate('/api/auth/login')
-    }
+    loginOrCreate('/api/auth/create')
   }
 
   async function loginOrCreate(endpoint) {
     try {
       const response = await fetch(endpoint, {
-        method: 'post',
+        method: 'POST',
         body: JSON.stringify({ email: userName, password }),
-        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-        credentials: 'include',
-      })
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      });
 
       if (response.ok) {
-        localStorage.setItem('userName', userName)
-        props.onAuthChange(userName, true)
-        return true
+        localStorage.setItem('userName', userName);
+        props.onLogin(userName); 
+      } else {
+        let body = {};
+        try {
+          body = await response.json();
+        } catch (err) {}
+        setDisplayError(`⚠ Error: ${body.msg || response.statusText}`);
       }
-
-      const body = await response.json().catch(() => ({}))
-      setDisplayError(`⚠ Error: ${body.msg ?? 'Unable to reach the backend service.'}`)
-      return false
-    } catch {
-      setDisplayError('⚠ Error: Unable to reach the backend service.')
-      return false
+    } catch (err) {
+      setDisplayError(`⚠ Network/Error: ${err.message}`);
     }
   }
 
