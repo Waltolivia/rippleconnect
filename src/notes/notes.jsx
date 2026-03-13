@@ -300,6 +300,17 @@ export function Notes({ authState, userName}) {
       setNotebooks(updated);
     }
 
+    function deleteNotebook(id) {
+      const updated = notebooks.filter(nb => nb.id !== id);
+      setNotebooks(updated);
+
+      if (selectedNotebookId === id) {
+        setSelectedNotebookId(null);
+      }
+
+      addNotification("🗑️ Notebook deleted");
+    }
+
     async function loadNotes() {
       try {
         const res = await fetch("/api/notes", {
@@ -344,7 +355,7 @@ export function Notes({ authState, userName}) {
         <div className="page-content">
           <div className="notebook_bar">
           {notebooks.map((notebook) => (
-            <li key={notebook.id}>
+            <li key={notebook.id} className="notebook-item">
               {editingNotebookId === notebook.id ? (
                 <input
                   value={notebook.name}
@@ -353,14 +364,23 @@ export function Notes({ authState, userName}) {
                   onBlur={() => setEditingNotebookId(null)}
                 />
               ) : (
-              <NavLink
-                to="/notes"
-                className={`bar-item-button ${selectedNotebookId === notebook.id ? "selected-notebook" : ""}`}
-                onClick={() => setSelectedNotebookId(notebook.id)}
-                onDoubleClick={() => setEditingNotebookId(notebook.id)}
-              >
-                {notebook.name}
-              </NavLink>
+                <>
+                  <NavLink
+                    to="/notes"
+                    className={`bar-item-button ${selectedNotebookId === notebook.id ? "selected-notebook" : ""}`}
+                    onClick={() => setSelectedNotebookId(notebook.id)}
+                    onDoubleClick={() => setEditingNotebookId(notebook.id)}
+                  >
+                    {notebook.name}
+                  </NavLink>
+
+                  <button
+                    className="delete-notebook"
+                    onClick={() => deleteNotebook(notebook.id)}
+                  >
+                    ❌
+                  </button>
+                </>
               )}
             </li>
           ))}
