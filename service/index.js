@@ -5,7 +5,6 @@ const { v4: uuidv4 } = require('uuid')
 
 const app = express()
 const authCookieName = 'token'
-app.use(express.static('public'));
 
 let users = []
 let scores = []
@@ -64,6 +63,10 @@ app.use((err, _req, res, _next) => {
   res.status(500).send({ msg: 'Internal server error' })
 })
 
+app.use((_req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
 async function createUser(email, password) {
   const passwordHash = await bcrypt.hash(password, 10)
   const user = { email, password: passwordHash, token: uuidv4() }
@@ -81,7 +84,7 @@ function setAuthCookie(res, token) {
     maxAge: 1000 * 60 * 60 * 24 * 365,
     httpOnly: true,
     sameSite: 'strict',
-    secure: false
+    secure: process.env.NODE_ENV === 'production'
   })
 }
 
