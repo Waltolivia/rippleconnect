@@ -173,24 +173,37 @@ export function Notes() {
       addNotification(`📝 Note added to Notebook`);
     }
 
-  function addSticky() {
-    const newSticky = {
-      id: Date.now(),
-      text: ""
-    };
+    function addSticky() {
+      if (!selectedNotebookId) {
+        addNotification("⚠️ Please select a notebook first");
+        return;
+      }
 
-    setStickies([...stickies, newSticky]);
-    setSelectedStickyId(newSticky.id);
-  }
+      const newSticky = {
+        id: Date.now(),
+        notebookId: selectedNotebookId,
+        text: ""
+      };
 
-  function addIndex() {
-    const newIndex = {
-      id: Date.now(),
-      text: ""
-    };
-    setIndexes([...indexes, newIndex]);
-    setSelectedIndexId(newIndex.id);
-  }
+      setStickies([...stickies, newSticky]);
+      setSelectedStickyId(newSticky.id);
+    }
+
+    function addIndex() {
+      if (!selectedNotebookId) {
+        addNotification("⚠️ Please select a notebook first");
+        return;
+      }
+
+      const newIndex = {
+        id: Date.now(),
+        notebookId: selectedNotebookId,
+        text: ""
+      };
+
+      setIndexes([...indexes, newIndex]);
+      setSelectedIndexId(newIndex.id);
+    }
 
     function updatedNoteText(value) {
       const updatedNote = { ...selectedNote, text: value };
@@ -202,14 +215,11 @@ export function Notes() {
     }
 
     function updateStickyText(value) {
-      const updatedSticky = {...selectedSticky, text: value};
-      const updated = stickies.map(sticky => sticky.id === selectedStickyId ? {...sticky, text: value } : sticky);
-      setStickies(updated)
-      NotesNotifier.broadcastEvent("user", NoteEvent.StickyUpdate, updatedSticky);
+      const updated = stickies.map(sticky => sticky.id === selectedStickyId ? { ...sticky, text: value } : sticky );
+      setStickies(updated);
     }
 
     function updateIndexText(value){
-      const updatedIndex = {...selectedIndex, text: value};
       const updated = indexes.map(index => index.id === selectedIndexId ? {...index, text: value }: index);
       setIndexes(updated)
       NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
@@ -311,7 +321,9 @@ export function Notes() {
 
 
           <div className="stickynotes">
-              {stickies.map(sticky => (
+              {stickies
+                .filter(sticky => sticky.notebookId === selectedNotebookId)
+                .map(sticky => (
                 <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)} >
                   {selectedStickyId === sticky.id ? (
                     <textarea value={sticky.text || ""} onChange={(e) => updateStickyText(e.target.value)} onBlur={() => setSelectedStickyId(null)} placeholder="Type your note here..." rows={5} cols={20} autoFocus/>
@@ -323,7 +335,9 @@ export function Notes() {
 
               {indexes.length > 0 && (
               <div className="index-card">
-                {indexes.map(index => (
+                {indexes
+                  .filter(index => index.notebookId === selectedNotebookId)
+                  .map(index => (
                   <div key={index.id} className="Index-note" onClick={() => setSelectedIndexId(index.id)}>
                   <img src="/starryexampleimg.png" alt="Blue Links" width="250" />
                     {selectedIndexId === index.id ? (
