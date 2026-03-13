@@ -16,7 +16,9 @@ export function Notes() {
   const selectedSticky = stickies.find(s => s.id === selectedStickyId);
   const selectedIndex = indexes.find(i => i.id === selectedIndexId);
   const [notebooks, setNotebooks] = useState([]);
-  const [notification, setNotification] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [selectedNotebookId, setSelectedNotebookId] = useState(null);
+  const [editingNotebookId, setEditingNotebookId] = useState(null);
 
 
   // Use Effects
@@ -73,7 +75,7 @@ export function Notes() {
   
   useEffect(() => {
     const handleEvent = (event) => {
-      if (event.type === NotesEvent.Add) {
+      if (event.type === NoteEvent.Add) {
         setNotes((prev) => [...prev, event.value]);
       }
       if(event.type === NoteEvent.Update) {
@@ -99,22 +101,49 @@ export function Notes() {
     };
   }, []);
 
+    useEffect(() => {
+      const joinTimer = setTimeout(() => {
+        addNotification("🟢 Alex joined the workspace");
+      }, 8000);
+
+      const notebookTimer = setTimeout(() => {
+        const newNotebook = {
+          id: Date.now(),
+          name: "Alex's Ideas",
+          owner: "Alex"
+        };
+
+        setNotebooks((prev) => [...prev, newNotebook]);
+        addNotification("📒 Alex created 'Alex's Ideas'");
+      }, 15000);
+
+      return () => {
+        clearTimeout(joinTimer);
+        clearTimeout(notebookTimer);
+      };
+    }, []);
+
 
     //functions
 
-  function addNote() {
-    const newNote = {
-      id: Date.now(),
-      title: title,
-      text: text
-    };
+    function addNote() {
+      if (!selectedNotebookId) {
+        addNotification("⚠️ Please select a notebook first");
+        return;
+      }
 
-    setNotes([...notes, newNote]);
-    NotesNotifier.broadcastEvent("user", NoteEvent.Add, newNote);
-    setSelectedNoteId(newNote.id);
-    setTitle("");
-    setText("");
-  }
+      const newNote = {
+        id: Date.now(),
+        notebookId: selectedNotebookId,
+        title: title,
+        text: text
+      };
+
+  setNotes([...notes, newNote]);
+  setSelectedNoteId(newNote.id);
+
+  addNotification(`📝 Note added to Notebook`);
+}
 
   function addSticky() {
     const newSticky = {
@@ -137,7 +166,7 @@ export function Notes() {
 
   function updatedNoteText(value) {
     const updatedNote = { ...selectedNote, text: value };
-    const updated = notes.map(note =>
+    const updated = notes.filter(note => note.notebookId === selectedNotebookId).map(note => 
       note.id === selectedNoteId ? updatedNote : note);
     setNotes(updated);
     NotesNotifier.broadcastEvent("user", NoteEvent.Update, updatedNote);
@@ -156,15 +185,6 @@ export function Notes() {
       NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
     }
 
-    function addNotebook() {
-      const newNotebook = {
-        id: Date.now(),
-        name: `Notebook ${notebooks.length + 1}`,
-        owner: "You"
-      };
-
-      setNotebooks([...notebooks, newNotebook]);
-    }
 
     function addNotification(message) {
       const newNotification = {
@@ -182,32 +202,72 @@ export function Notes() {
       }, 5000);
     }
 
+    function addNotebook() {
+      const newNotebook = {
+        id: Date.now(),
+        name: `Notebook ${notebooks.length + 1}`,
+        owner: "You"
+      };
+
+      setNotebooks([...notebooks, newNotebook]);
+      setSelectedNotebookId(newNotebook.id);
+
+      addNotification(`📒 You created ${newNotebook.name}`);
+    }
+
+    function updateNotebookName(id, value) {
+      const updated = notebooks.map((nb) =>
+        nb.id === id ? { ...nb, name: value } : nb
+      );
+
+      setNotebooks(updated);
+    }
+
+
       //page content
 
   return (
     <main>
         <div className="page-content">
           <div className="notebook_bar">
-            {notebooks.map((notebook) => (
-              <li key={notebook.id}>
-                <NavLink to="/notes" className="bar-item-button">
+          {notebooks.map((notebook) => (
+            <li key={notebook.id}>
+              {editingNotebookId === notebook.id ? (
+                <input
+                  value={notebook.name}
+                  autoFocus
+                  onChange={(e) => updateNotebookName(notebook.id, e.target.value)}
+                  onBlur={() => setEditingNotebookId(null)}
+                />
+              ) : (
+                <NavLink
+                  to="/notes"
+                  className="bar-item-button"
+                  onClick={() => setSelectedNotebookId(notebook.id)}
+                  onDoubleClick={() => setEditingNotebookId(notebook.id)}
+                >
                   {notebook.name}
                 </NavLink>
-              </li>
-            ))}
+              )}
+            </li>
+          ))}
               <button className="new_notebook" type="button" onClick={addNotebook}>
                 New Notebook
               </button>
           </div>
 
-          {notification && (
-            <div className="notification">
-              {notification}
+        <div className="notifications">
+          {notifications.map((note) => (
+            <div key={note.id} className="notification">
+              {note.message}
             </div>
-          )}
+          ))}
+        </div>
 
         <div className="content-notes">
-          {notes.map(note => (
+          {notes
+            .filter(note => note.notebookId === selectedNotebookId)
+            .map(note => (
             <div key={note.id} className="note" onClick={() => setSelectedNoteId(note.id)}>
               <h2>{note.title}</h2>
 
