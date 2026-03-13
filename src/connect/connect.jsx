@@ -47,12 +47,11 @@ export function Connect() {
     <main>
       <div className="page-content">
 
-        <div className="notebook_bar">
-          <li><NavLink to="/notes" className="bar-item-button">Notebook1</NavLink></li>
-          <li><NavLink to="/notes" className="bar-item-button">Notebook2</NavLink></li>
-          <li><NavLink to="/notes" className="bar-item-button">Notebook3</NavLink></li>
-          <button className="new_notebook" type="button">New Notebook</button>
-        </div>
+      <div className="notebook_bar">
+        <NavLink to="/notes" className="bar-item-button">
+          Go to Notes
+        </NavLink>
+      </div>
 
         <div className="connect-page-content">
 

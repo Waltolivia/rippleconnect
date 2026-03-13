@@ -4,9 +4,28 @@ import { NotesNotifier, NoteEvent } from "./notesNotifier";
 
 
 export function Notes() {
-  const [notes, setNotes] = useState([]);
-  const [stickies, setStickies] = useState([]);
-  const [indexes, setIndexes] = useState([]);
+    const [notes, setNotes] = useState(() => {
+    const saved = localStorage.getItem("notes");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [stickies, setStickies] = useState(() => {
+    const saved = localStorage.getItem("stickies");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [indexes, setIndexes] = useState(() => {
+    const saved = localStorage.getItem("indexes");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [notebooks, setNotebooks] = useState(() => {
+    const saved = localStorage.getItem("notebooks");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [selectedNotebookId, setSelectedNotebookId] = useState(() => {
+    const saved = localStorage.getItem("selectedNotebookId");
+    return saved ? Number(saved) : null;
+  });
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -15,21 +34,10 @@ export function Notes() {
   const selectedNote = notes.find(n => n.id === selectedNoteId);
   const selectedSticky = stickies.find(s => s.id === selectedStickyId);
   const selectedIndex = indexes.find(i => i.id === selectedIndexId);
-  const [notebooks, setNotebooks] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [selectedNotebookId, setSelectedNotebookId] = useState(null);
   const [editingNotebookId, setEditingNotebookId] = useState(null);
-  
-
 
   // Use Effects
-
-  useEffect(() =>{      //load notes when page open
-    const saved = localStorage.getItem("notes");
-    if (saved) {
-      setNotes(JSON.parse(saved));
-    }
-  }, []);
 
   useEffect(() => {     //save notes when they change
     localStorage.setItem("notes", JSON.stringify(notes));
@@ -45,29 +53,15 @@ export function Notes() {
 
       setNotebooks((prev) => [...prev, newNotebook]);
 
-      setNotification("Another user added Notebook 2!");
+      addNotification("Another user added Notebook 2!");
     }, 5000); // appears after 5 seconds
 
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const saved = localStorage.getItem("stickies");
-    if(saved)setStickies(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem("stickies", JSON.stringify(stickies)); 
   }, [stickies]);
-
-
-
-  useEffect(() => {
-    const saved = localStorage.getItem("indexes");
-    if (saved) {
-      setIndexes(JSON.parse(saved));
-    }
-  }, []);
 
 
   useEffect(() => {
@@ -85,9 +79,11 @@ export function Notes() {
       note.id === event.value.id ? event.value : note));
       }
       if (event.type === NoteEvent.StickyUpdate) {
-        setIndexes((prev) =>
-        prev.map((sticky) =>
-        sticky.id === event.value.id ? event.value : sticky));
+        setStickies((prev) =>
+          prev.map((sticky) =>
+            sticky.id === event.value.id ? event.value : sticky
+          )
+        );
       }
       if (event.type === NoteEvent.IndexUpdate) {
         setIndexes((prev) =>
@@ -125,28 +121,31 @@ export function Notes() {
     }, []);
 
     useEffect(() => {
-      if (selectedNotebookId) {
+      if (selectedNotebookId !== null) {
         localStorage.setItem("selectedNotebookId", selectedNotebookId);
       }
     }, [selectedNotebookId]);
 
     useEffect(() => {
-      const savedNotebook = localStorage.getItem("selectedNotebookId");
-      if (savedNotebook) {
-        setSelectedNotebookId(Number(savedNotebook));
-      }
-    }, []);
-
-    useEffect(() => {
-      const saved = localStorage.getItem("notebooks");
-      if (saved) {
-        setNotebooks(JSON.parse(saved));
-      }
-    }, []);
-
-    useEffect(() => {
       localStorage.setItem("notebooks", JSON.stringify(notebooks));
     }, [notebooks]);
+
+    useEffect(() => {   //save when the pages change
+      const saveBeforeLeave = () => {
+        localStorage.setItem("notes", JSON.stringify(notes));
+        localStorage.setItem("stickies", JSON.stringify(stickies));
+        localStorage.setItem("indexes", JSON.stringify(indexes));
+        localStorage.setItem("notebooks", JSON.stringify(notebooks));
+        localStorage.setItem("selectedNotebookId", selectedNotebookId);
+      };
+
+      window.addEventListener("beforeunload", saveBeforeLeave);
+
+      return () => {
+        window.removeEventListener("beforeunload", saveBeforeLeave);
+      };
+    }, [notes, stickies, indexes, notebooks, selectedNotebookId]);
+
 
 
     //functions
@@ -206,24 +205,38 @@ export function Notes() {
     }
 
     function updatedNoteText(value) {
+      if (!selectedNote) return;
+
       const updatedNote = { ...selectedNote, text: value };
+
       const updated = notes.map(note =>
         note.id === selectedNoteId ? updatedNote : note
       );
+
       setNotes(updated);
       NotesNotifier.broadcastEvent("user", NoteEvent.Update, updatedNote);
     }
 
     function updateStickyText(value) {
-      const updated = stickies.map(sticky => sticky.id === selectedStickyId ? { ...sticky, text: value } : sticky );
+      const updatedSticky = { ...selectedSticky, text: value };
+
+      const updated = stickies.map(sticky =>
+        sticky.id === selectedStickyId ? updatedSticky : sticky
+      );
+
       setStickies(updated);
+
+      NotesNotifier.broadcastEvent("user", NoteEvent.StickyUpdate, updatedSticky);
     }
 
-    function updateIndexText(value){
-      const updated = indexes.map(index => index.id === selectedIndexId ? {...index, text: value }: index);
-      setIndexes(updated)
-      NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
-    }
+  function updateIndexText(value){
+    const updatedIndex = {...selectedIndex, text: value};
+    const updated = indexes.map(index =>
+      index.id === selectedIndexId ? updatedIndex : index
+    );
+    setIndexes(updated);
+    NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
+  }
 
 
     function addNotification(message) {

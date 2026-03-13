@@ -104,12 +104,10 @@ header .bar-item-button {
 }
 
 .content {
-    position: relative;
-    flex: 1;
-    border: 2px solid #05121d;
-    height: 500px;
-    background-color: #172e42;
-
+  position: relative;
+  height: 500px;
+  border: 2px solid gray;
+  overflow: hidden; 
 }
 
 .button_start {
