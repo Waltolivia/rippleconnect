@@ -3,12 +3,15 @@ const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
-const { connectToDatabase, getDB } = require('./db');
+const { MongoClient } = require('mongodb');
+const config = require('./dbConfig.json');
 
 const authCookieName = 'token'
+const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}/?retryWrites=true&w=majority`;
+const client = new MongoClient(url);
+const db = client.db('rental');
+const collection = db.collection('house');
 
-let users = []
-let notes = []
 
 const port = process.argv.length > 2 ? Number(process.argv[2]) : 4000
 
@@ -62,7 +65,6 @@ async function verifyAuth(req, res, next) {
 }
 
 apiRouter.get('/notes', verifyAuth, async (req, res) => {
-  const db = getDB();
   const user = await findUser('token', req.cookies[authCookieName]);
   const userNotes = await db.collection('notes').find({ userId: user.email }).toArray();
   res.send(userNotes);
@@ -74,7 +76,6 @@ apiRouter.post('/notes', verifyAuth, async(req, res) => {
     return res.status(400).send({ msg: 'Note text required' })
   }
 
-  const db = getDB();
   const user = await findUser('token', req.cookies[authCookieName]);
 
   const newNote = {
@@ -98,7 +99,6 @@ app.use((_req, res) => {
 });
 
 async function createUser(email, password) {
-  const db = getDB();
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = {
@@ -113,7 +113,6 @@ async function createUser(email, password) {
 
 async function findUser(field, value) {
   if (!value) return null;
-  const db = getDB();
   return await db.collection('users').findOne({ [field]: value });
 }
 
@@ -126,6 +125,12 @@ function setAuthCookie(res, token) {
   })
 }
 
-connectToDatabase(); // udpate to say it connects
 
-app.listen(port, () => console.log(`Backend listening on port ${port}`))
+async function start() {
+  await client.connect();
+  console.log('Connected to MongoDB');
+
+  app.listen(port, () => console.log(`Backend listening on port ${port}`));
+}
+
+start();
