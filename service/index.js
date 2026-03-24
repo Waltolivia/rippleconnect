@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
+const { connectToDatabase, getDB } = require('./db');
 
 const authCookieName = 'token'
 
@@ -105,5 +106,6 @@ function setAuthCookie(res, token) {
   })
 }
 
+connectToDatabase(); // udpate to say it connects
 
 app.listen(port, () => console.log(`Backend listening on port ${port}`))
