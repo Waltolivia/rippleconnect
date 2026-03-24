@@ -85,16 +85,23 @@ app.use((_req, res) => {
 });
 
 async function createUser(email, password) {
-  const passwordHash = await bcrypt.hash(password, 10)
-  console.log('create user function reached')
-  const user = { email, password: passwordHash, token: uuid.v4() }
-  users.push(user)
-  return user
+  const db = getDB();
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const user = {
+    email,
+    password: passwordHash,
+    token: uuid.v4()
+  };
+
+  await db.collection('users').insertOne(user);
+  return user;
 }
 
 async function findUser(field, value) {
-  if (!value) return null
-  return users.find(u => u[field] === value) || null
+  if (!value) return null;
+  const db = getDB();
+  return await db.collection('users').findOne({ [field]: value });
 }
 
 function setAuthCookie(res, token) {
