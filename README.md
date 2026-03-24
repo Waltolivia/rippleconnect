@@ -106,8 +106,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
+- [X] **Stores data in MongoDB** - Mongo successfully stores each users notes info and changes. 
+- [X] **Stores credentials in MongoDB** - Mongo saved credentials over page restarts and sign ins work correctly. 
 
 ## 🚀 WebSocket deliverable
 
