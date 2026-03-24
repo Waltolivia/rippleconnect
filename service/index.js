@@ -40,11 +40,17 @@ apiRouter.post('/auth/create', async (req, res) => {
 apiRouter.post('/auth/login', async (req, res) => {
   console.log('/auth/login reached')
   const { email, password } = req.body || {}
-  if (!email || !password) return res.status(400).send({ msg: 'Missing email or password' })
+  if (!email || !password) {
+    return res.status(400).send({ msg: 'Missing email or password' })
+  }
   const user = await findUser('email', email)
   if (user && (await bcrypt.compare(password, user.password))) {
-    user.token = uuid.v4()
-    setAuthCookie(res, user.token)
+    const newToken = uuid.v4()
+    await db.collection('users').updateOne(
+      { email: user.email },
+      { $set: { token: newToken } }
+    )
+    setAuthCookie(res, newToken)
     return res.send({ email: user.email })
   }
   return res.status(401).send({ msg: 'Unauthorized' })
@@ -79,7 +85,10 @@ apiRouter.post('/notes', verifyAuth, async(req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
 
   const newNote = {
+    id: note.id,
+    title: note.title,
     text: note.text,
+    notebookId: note.notebookId,
     userId: user.email
   };
 
