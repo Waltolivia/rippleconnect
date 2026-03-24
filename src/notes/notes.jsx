@@ -40,25 +40,11 @@ export function Notes({ authState, userName}) {
 
   // Use Effects
 
-    useEffect(() => {
-      async function loadNotes() {
-        try {
-          const res = await fetch("/api/notes");
-          if (res.ok) {
-            const data = await res.json();
-            setNotes(data);
-          } else {
-            console.error("Failed to fetch notes", res.status);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      }
-
-      if (authState === AuthState.Authenticated) {
-        loadNotes();
-      }
-    }, [authState]);
+  useEffect(() => {
+    if (authState === AuthState.Authenticated) {
+      loadNotes();
+    }
+  }, [authState]);
 
   useEffect(() => {     //save notes when they change
     localStorage.setItem("notes", JSON.stringify(notes));
@@ -181,12 +167,12 @@ export function Notes({ authState, userName}) {
         return;
       }
 
-      const newNote = {
-        id: Date.now(),
-        notebookId: selectedNotebookId,
-        title: title,
-        text: text || "New note..."   // <-- fix
-      };
+    const newNote = {
+      id: Date.now(),
+      title: title,
+      text: text || "New note...",
+      notebookId: selectedNotebookId
+    };
 
       saveNoteBackend(newNote);
 
@@ -319,10 +305,12 @@ export function Notes({ authState, userName}) {
         if (res.ok) {
           const data = await res.json();
           setNotes(data);
-        } else {
+        } 
+        else {
           console.error("Failed to fetch notes", res.status);
         }
-      } catch (err) {
+      } 
+      catch (err) {
         console.error(err);
       }
     }
