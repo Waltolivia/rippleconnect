@@ -61,18 +61,31 @@ async function verifyAuth(req, res, next) {
   return res.status(401).send({ msg: 'Unauthorized' })
 }
 
-apiRouter.get('/notes', verifyAuth, (_req, res) => {
-  res.send(notes)
-})
+apiRouter.get('/notes', verifyAuth, async (req, res) => {
+  const db = getDB();
+  const user = await findUser('token', req.cookies[authCookieName]);
+  const userNotes = await db.collection('notes').find({ userId: user.email }).toArray();
+  res.send(userNotes);
+});
 
-apiRouter.post('/notes', verifyAuth, (req, res) => {
+apiRouter.post('/notes', verifyAuth, async(req, res) => {
   const note = req.body
   if (!note || !note.text) {
     return res.status(400).send({ msg: 'Note text required' })
   }
 
-  notes.push(note)
-  res.send(notes)
+  const db = getDB();
+  const user = await findUser('token', req.cookies[authCookieName]);
+
+  const newNote = {
+    text: note.text,
+    userId: user.email
+  };
+
+  await db.collection('notes').insertOne(newNote);
+
+  const updatedNotes = await db.collection('notes').find({ userId: user.email }).toArray();
+  res.send(updatedNotes);
 })
 
 app.use((err, _req, res, _next) => {
