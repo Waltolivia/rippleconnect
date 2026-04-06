@@ -7,6 +7,8 @@ const { MongoClient } = require('mongodb');
 const config = require('./dbConfig.json');
 const { peerProxy } = require('~/peerProxy.js');
 
+let wss;
+
 const authCookieName = 'token'
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}/?retryWrites=true&w=majority`;
 const client = new MongoClient(url);
@@ -94,6 +96,19 @@ apiRouter.post('/notes', verifyAuth, async(req, res) => {
   };
 
   await db.collection('notes').insertOne(newNote);
+
+  if (wss) {
+    const message = JSON.stringify({
+      type: 'noteUpdate',
+      note: newNote
+    });
+
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.send(message);
+      }
+    });
+  }
 
   const updatedNotes = await db.collection('notes').find({ userId: user.email }).toArray();
   res.send(updatedNotes);
