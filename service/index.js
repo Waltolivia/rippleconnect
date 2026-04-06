@@ -5,6 +5,7 @@ const uuid = require('uuid');
 const app = express();
 const { MongoClient } = require('mongodb');
 const config = require('./dbConfig.json');
+const { peerProxy } = require('~/peerProxy.js');
 
 const authCookieName = 'token'
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}/?retryWrites=true&w=majority`;
@@ -139,7 +140,11 @@ async function start() {
   await client.connect();
   console.log('Connected to MongoDB');
 
-  app.listen(port, () => console.log(`Backend listening on port ${port}`));
-}
+  const httpService = app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
+  });
+
+  const wss = peerProxy(httpService);
+  }
 
 start();
