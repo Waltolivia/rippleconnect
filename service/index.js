@@ -5,7 +5,7 @@ const uuid = require('uuid');
 const app = express();
 const { MongoClient } = require('mongodb');
 const config = require('./dbConfig.json');
-const { peerProxy } = require('~/peerProxy.js');
+const { peerProxy } = require('./peerproxy.js');
 
 let wss;
 
@@ -159,7 +159,7 @@ async function start() {
     console.log(`Listening on port ${port}`);
   });
 
-  const wss = peerProxy(httpService);
-  }
+  wss = peerProxy(httpService);
+}
 
 start();

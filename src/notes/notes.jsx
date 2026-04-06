@@ -50,21 +50,6 @@ export function Notes({ authState, userName}) {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
-  useEffect(() => {     //fake second user
-    const timer = setTimeout(() => {
-      const newNotebook = {
-        id: Date.now(),
-        name: "Notebook 2",
-        owner: "Other User"
-      };
-
-      setNotebooks((prev) => [...prev, newNotebook]);
-
-      addNotification("Another user added Notebook 2!");
-    }, 5000); // appears after 5 seconds
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     localStorage.setItem("stickies", JSON.stringify(stickies)); 

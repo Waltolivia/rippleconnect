@@ -2,9 +2,10 @@
 html, main, #root {
     background-color: #0C1E2F;
     color:antiquewhite;
-    margin-top: 0;
-    margin-bottom: 0;
-    text-align: center;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
     font-family: "Indie Flower", cursive;
     font-weight: 400;
     font-style: bold;
@@ -52,6 +53,8 @@ h1, h2 {
 .page-content {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .notebook_bar {
@@ -71,6 +74,8 @@ h1, h2 {
     text-align: left;
     max-height: 40em;
     padding-top: 1rem;
+    width: 12em;
+    height: 100%;
 }
 
 .notebook_bar li:hover {
@@ -135,9 +140,17 @@ header .bar-item-button {
     grid-template-columns: minmax(35em, 1fr) minmax(35em, 1fr);
     grid-template-rows: auto auto;
     gap: 1.5rem;
-    padding: 3rem;
+    padding: 1rem;
     overflow-y: auto;
+    overflow: visible;
     align-content: start;
+    height: 100%
+}
+
+.note, .sticky-note, .Index-note {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; 
 }
 
 .stickynotes {
