@@ -95,17 +95,6 @@ export function Notes({ authState, userName}) {
         addNotification("🟢 Alex joined the workspace");
       }, 8000);
 
-      const notebookTimer = setTimeout(() => {
-        const newNotebook = {
-          id: Date.now(),
-          name: "Alex's Ideas",
-          owner: "Alex"
-        };
-
-        setNotebooks((prev) => [...prev, newNotebook]);
-        addNotification("📒 Alex created 'Alex's Ideas'");
-      }, 15000);
-
       return () => {
         clearTimeout(joinTimer);
         clearTimeout(notebookTimer);
@@ -320,6 +309,14 @@ export function Notes({ authState, userName}) {
       }
     }
 
+    const filteredIndexes = indexes.filter(
+      index => index.notebookId === selectedNotebookId
+    );
+
+    const filteredStickies = stickies.filter(
+      sticky => sticky.notebookId === selectedNotebookId
+    );
+
 
       //page content
 
@@ -386,34 +383,50 @@ export function Notes({ authState, userName}) {
           ))}
 
 
-          <div className="stickynotes">
-              {stickies
-                .filter(sticky => sticky.notebookId === selectedNotebookId)
-                .map(sticky => (
-                <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)} >
+          {filteredStickies.length > 0 && (
+            <div className="stickynotes">
+              {filteredStickies.map(sticky => (
+                <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)}>
                   {selectedStickyId === sticky.id ? (
-                    <textarea value={sticky.text || ""} onChange={(e) => updateStickyText(e.target.value)} onBlur={() => setSelectedStickyId(null)} placeholder="Type your note here..." rows={5} cols={20} autoFocus/>
+                    <textarea
+                      value={sticky.text || ""}
+                      onChange={(e) => updateStickyText(e.target.value)}
+                      onBlur={() => setSelectedStickyId(null)}
+                      placeholder="Type your note here..."
+                      rows={5}
+                      cols={20}
+                      autoFocus
+                    />
                   ) : (
-                  <p>{sticky.text || "Click to edit..."}</p>)}
+                    <p>{sticky.text || "Click to edit..."}</p>
+                  )}
                 </div>
               ))}
-          </div>
+            </div>
+          )}
 
-              {indexes.length > 0 && (
-              <div className="index-card">
-                {indexes
-                  .filter(index => index.notebookId === selectedNotebookId)
-                  .map(index => (
-                  <div key={index.id} className="Index-note" onClick={() => setSelectedIndexId(index.id)}>
+          {filteredIndexes.length > 0 && (
+            <div className="index-card">
+              {filteredIndexes.map(index => (
+                <div key={index.id} className="Index-note" onClick={() => setSelectedIndexId(index.id)}>
                   <img src="/starryexampleimg.png" alt="Blue Links" width="250" />
-                    {selectedIndexId === index.id ? (
-                      <textarea value={index.text || ""} onChange={(e) => updateIndexText(e.target.value)} onBlur={() => setSelectedIndexId(null)} placeholder="Type your notes here..." rows={5} cols={15} autoFocus />
-                    ) : (
-                      <p>{index.text || "Click to edit..."}</p>)}
-                      </div>
-                    ))}
-              </div>
-              )}
+                  {selectedIndexId === index.id ? (
+                    <textarea
+                      value={index.text || ""}
+                      onChange={(e) => updateIndexText(e.target.value)}
+                      onBlur={() => setSelectedIndexId(null)}
+                      placeholder="Type your notes here..."
+                      rows={5}
+                      cols={15}
+                      autoFocus
+                    />
+                  ) : (
+                    <p>{index.text || "Click to edit..."}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
 
             <div className="New-Note">
