@@ -9,6 +9,7 @@ html, main, #root {
     font-family: "Indie Flower", cursive;
     font-weight: 400;
     font-style: bold;
+    text-align: center;
 }
 
 header {
@@ -55,6 +56,8 @@ h1, h2 {
     min-height: 100vh;
     width: 100%;
     overflow-x: hidden;
+    text-align: center;
+    margin-top: 3em;
 }
 
 .notebook_bar {
@@ -243,6 +246,13 @@ header .bar-item-button {
     max-width: 100px;
     object-fit: cover;
     border-radius: 50%;
+}
+
+.connect-instruct {
+    text-align: center;
+}
+.connect-p {
+    font-weight: bold;
 }
 
 
