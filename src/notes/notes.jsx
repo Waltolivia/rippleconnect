@@ -97,7 +97,6 @@ export function Notes({ authState, userName}) {
 
       return () => {
         clearTimeout(joinTimer);
-        clearTimeout(notebookTimer);
       };
     }, []);
 

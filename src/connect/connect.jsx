@@ -7,12 +7,28 @@ function DraggableItem({ id, label, src, x, y, onRename }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
   const style = {position: "absolute", left: x, top: y, transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined, textAlign: "center"};
 
+  <div
+  ref={setNodeRef}
+  style={style}
+  onClick={() => onSelect(id)}
+  ></div>
+
   return (
     <div ref={setNodeRef} style={style}>
       <img src={src}  alt={label} width="80" style={{ cursor: "grab" }}{...listeners}{...attributes}/>
       <input value={label} onChange={(e) => onRename(id, e.target.value)} style={{ textAlign: "center" }} />
     </div>
   );
+
+}
+
+function handleSelect(id) {
+  if (!selectedItem) {
+    setSelectedItem(id);
+  } else if (selectedItem !== id) {
+    setConnections(prev => [...prev, { from: selectedItem, to: id }]);
+    setSelectedItem(null);
+  }
 }
 
 export function Connect() {
@@ -21,6 +37,8 @@ export function Connect() {
     { id: "2", label: "Notebook1", src: "/documenticon.png", x: 200, y: 100 },
     { id: "3", label: "Sticky Note", src: "/documenticon.png", x: 350, y: 150 }
   ]);
+  const [connections, setConnections] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
 
   function addItem() {
@@ -69,6 +87,7 @@ export function Connect() {
                   x={item.x}
                   y={item.y}
                   onRename={renameItem}
+                  onSelect={handleSelect}
                 />
               ))}
 
