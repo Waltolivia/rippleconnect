@@ -366,20 +366,27 @@ export function Notes({ authState, userName}) {
           ))}
         </div>
 
-        <div className="content-notes">
-          {notes
-            .filter(note => note.notebookId === selectedNotebookId)
-            .map(note => (
-            <div key={note.id} className="note" onClick={() => setSelectedNoteId(note.id)}>
-              <h2>{note.title}</h2>
+        <div className="main-content">
+          <div className="notes-instructions">
+            <h3>Welcome to the Notebooks!</h3>
+            <p>Use the buttons to add Notes, Sticky Notes, and Index Cards to help you take notes. Everything is saved to its notebook so feel free to come back anytime. </p>
+          </div>
+          
+          <div className="content-notes">
+            {notes
+              .filter(note => note.notebookId === selectedNotebookId)
+              .map(note => (
+              <div key={note.id} className="note" onClick={() => setSelectedNoteId(note.id)}>
+                <h2>{note.title}</h2>
 
-              {selectedNoteId === note.id ? (
-                <textarea value={note.text || ""} onChange={(e) => updatedNoteText(e.target.value)} onBlur={() => setSelectedNoteId(null)} placeholder="Type your text here..." rows={20} cols={60} autoFocus/>
-              ) : (
-                <p>{note.text || "Click to edit..."}</p>
-              )}
-            </div>
-          ))}
+                {selectedNoteId === note.id ? (
+                  <textarea value={note.text || ""} onChange={(e) => updatedNoteText(e.target.value)} onBlur={() => setSelectedNoteId(null)} placeholder="Type your text here..." rows={20} cols={60} autoFocus/>
+                ) : (
+                  <p>{note.text || "Click to edit..."}</p>
+                )}
+              </div>
+            ))}
+          </div>
 
 
           {filteredStickies.length > 0 && (

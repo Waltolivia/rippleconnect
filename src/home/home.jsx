@@ -43,12 +43,14 @@ export function Home({ userName, authState, onAuthChange }) {
       </div>
 
         <div className="content">
-          <h1>Home</h1>
+          <h1>Welcome to the Home Page</h1>
           <h3>
             This is a place to make connections, let ideas flow, and let colors help you learn or write what you need to!
           </h3>
 
-          <img src="/download.png" alt="Blue Links" />
+          <img className="home-image" src="/download.png" alt="Blue Links" />
+
+          <p>To start making connections you can login, or create a sign in, and start studying. You can also make notebooks that you can use to write, make sticky notes for definitions and details, and index cards for other information. </p>
 
           <h2>Start a New Note</h2>
           <NavLink to={authState === AuthState.Authenticated ? "/notes" : "/"}>
