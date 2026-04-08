@@ -228,6 +228,15 @@ export function Notes({ authState, userName}) {
         note.id === selectedNoteId ? updatedNote : note
       );
 
+      if (socket) {
+        socket.send(JSON.stringify({
+          type: "update",
+          notebookId: selectedNotebookId,
+          event: NoteEvent.Update,
+          value: updatedNote
+        }));
+      }
+
       setNotes(updated);
       NotesNotifier.broadcastEvent("user", NoteEvent.Update, updatedNote);
     }
@@ -239,6 +248,15 @@ export function Notes({ authState, userName}) {
         sticky.id === selectedStickyId ? updatedSticky : sticky
       );
 
+      if (socket) {
+        socket.send(JSON.stringify({
+          type: "update",
+          notebookId: selectedNotebookId,
+          event: StickyEvent.Update,
+          value: updatedSticky
+        }));
+      }
+
       setStickies(updated);
 
       NotesNotifier.broadcastEvent("user", NoteEvent.StickyUpdate, updatedSticky);
@@ -249,6 +267,15 @@ export function Notes({ authState, userName}) {
     const updated = indexes.map(index =>
       index.id === selectedIndexId ? updatedIndex : index
     );
+
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "update",
+        notebookId: selectedNotebookId,
+        event: InvEvent.Update,
+        value: updatedIndex
+      }));
+    }
     setIndexes(updated);
     NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
   }
@@ -304,7 +331,7 @@ export function Notes({ authState, userName}) {
 
     async function loadNotes() {
       try {
-        const res = await fetch("/api/notes", {
+        const res = await fetch(`/api/notes?notebookId=${selectedNotebookId}`, {
           credentials: "include"
         });
         if (res.ok) {

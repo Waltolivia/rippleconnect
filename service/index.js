@@ -74,9 +74,12 @@ async function verifyAuth(req, res, next) {
 }
 
 apiRouter.get('/notes', verifyAuth, async (req, res) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
-  const userNotes = await db.collection('notes').find({ userId: user.email }).toArray();
-  res.send(userNotes);
+  const notebookId = Number(req.query.notebookId);
+  if (!notebookId) {
+    return res.status(400).send({ msg: 'notebookId required' });
+  }
+  const notes = await db.collection('notes').find({ notebookId: notebookId }).toArray();
+  res.send(notes);
 });
 
 apiRouter.post('/notes', verifyAuth, async(req, res) => {
@@ -97,14 +100,7 @@ apiRouter.post('/notes', verifyAuth, async(req, res) => {
 
   await db.collection('notes').insertOne(newNote);
 
-  if (wss) {
-    const message = JSON.stringify({
-      type: 'noteUpdate',
-      note: newNote
-    });
-  }
-
-  const updatedNotes = await db.collection('notes').find({ userId: user.email }).toArray();
+  const updatedNotes = await db.collection('notes').find({ notebookId: req.query.notebookId }).toArray();
   res.send(updatedNotes);
 })
 
