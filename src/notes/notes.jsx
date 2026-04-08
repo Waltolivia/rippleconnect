@@ -134,7 +134,13 @@ export function Notes({ authState, userName}) {
     }, [authState]);
 
     useEffect(() => {
-    if (!selectedNotebookId) return;
+      if (!selectedNotebookId) return;
+
+    useEffect(() => {
+      if (authState === AuthState.Authenticated && selectedNotebookId) {
+        loadNotes();
+      }
+    }, [selectedNotebookId]);
 
     const ws = new WebSocket(`ws://${window.location.host}/ws`);
 
@@ -528,7 +534,9 @@ export function Notes({ authState, userName}) {
               </form>
             </div>
 
-
+            <button onClick={shareNotebook}>
+              Share Notebook
+            </button>
 
           </div>
 
