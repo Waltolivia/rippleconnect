@@ -330,6 +330,7 @@ export function Notes({ authState, userName}) {
     }
 
     async function loadNotes() {
+      if (!selectedNotebookId) return;
       try {
         const res = await fetch(`/api/notes?notebookId=${selectedNotebookId}`, {
           credentials: "include"
@@ -337,12 +338,10 @@ export function Notes({ authState, userName}) {
         if (res.ok) {
           const data = await res.json();
           setNotes(data);
-        } 
-        else {
+        } else {
           console.error("Failed to fetch notes", res.status);
         }
-      } 
-      catch (err) {
+      } catch (err) {
         console.error(err);
       }
     }

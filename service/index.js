@@ -100,7 +100,7 @@ apiRouter.post('/notes', verifyAuth, async(req, res) => {
 
   await db.collection('notes').insertOne(newNote);
 
-  const updatedNotes = await db.collection('notes').find({ notebookId: req.query.notebookId }).toArray();
+  const updatedNotes = await db.collection('notes').find({ notebookId: note.notebookId }).toArray();
   res.send(updatedNotes);
 })
 
