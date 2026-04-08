@@ -113,8 +113,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [X] **Backend listens for WebSocket connection** - I was able to use peerproxy like the simon activity to listen on the backend, adding it to my index.js file in service
+- [X] **Frontend makes WebSocket connection** - note.jsx is the main file used here and it listens to websocket in a useEffect that notes it is connected
+- [X] **Data sent over WebSocket connection** - data is sent using socket.send for updates
+- [ ] **WebSocket data displayed** - Note update over websocket with initial and updated versions
+- [X] **Application is fully functional** - Files are shared and sent by way of link and web socket connection to other accounts, though i will admit I hoped to make it udpate immediatly like google drive, but was unabele to achieve it yet. 
