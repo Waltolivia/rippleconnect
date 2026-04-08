@@ -3,6 +3,11 @@ import { NotesNotifier, NoteEvent } from "./notesNotifier";
 import { AuthState } from "../authState";
 import React, { useState, useEffect, useRef } from "react";
 
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : window.location.origin;
+
 /* sign in testing:
 user 1: helo@hello.com  hello
 user 2 stargirl@stargirl.com  stargirl
@@ -264,7 +269,8 @@ export function Notes({ authState, userName}) {
     useEffect(() => { // one useeffect for connection notifications
       if (!selectedNotebookId || !userName) return;
 
-      const ws = new WebSocket(`ws://${window.location.host}/ws`);
+      const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+      const ws = new WebSocket(`${protocol}://${window.location.host}/ws`);
       setSocket(ws);
 
       ws.onopen = () => {
@@ -497,7 +503,7 @@ export function Notes({ authState, userName}) {
     async function loadNotes(notebookId) {
       if (!notebookId) return;
       try {
-        const res = await fetch(`/api/notes?notebookId=${notebookId}`, { credentials: "include" });
+        const res = await fetch(`${API_BASE}/api/notes?notebookId=${notebookId}`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
           setNotes(data);
@@ -507,7 +513,7 @@ export function Notes({ authState, userName}) {
 
     async function saveNoteBackend(note) {
       try {
-        const res = await fetch("/api/notes", {
+        const res = await fetch(`${API_BASE}/api/notes`, {  // <-- use backticks
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -527,7 +533,7 @@ export function Notes({ authState, userName}) {
 
     async function loadStickies(notebookId) {
       try {
-        const res = await fetch(`/api/stickies?notebookId=${notebookId}`, { credentials: "include" });
+        const res = await fetch(`${API_BASE}/api/stickies?notebookId=${notebookId}`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
           setStickies(data);
@@ -537,7 +543,7 @@ export function Notes({ authState, userName}) {
 
     async function loadIndexes(notebookId) {
       try {
-        const res = await fetch(`/api/indexes?notebookId=${notebookId}`, { credentials: "include" });
+        const res = await fetch(`${API_BASE}/api/indexes?notebookId=${notebookId}`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
           setIndexes(data);
