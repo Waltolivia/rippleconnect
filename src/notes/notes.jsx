@@ -69,32 +69,45 @@ export function Notes({ authState, userName}) {
   
   useEffect(() => {
     const handleEvent = (event) => {
-      if (event.type === NoteEvent.Add) {
-        setNotes((prev) => [...prev, event.value]);
-      }
-      if(event.type === NoteEvent.Update) {
-        setNotes((prev) =>
-        prev.map((note) =>
-      note.id === event.value.id ? event.value : note));
-      }
-      if (event.type === NoteEvent.StickyUpdate) {
-        setStickies((prev) =>
-          prev.map((sticky) =>
-            sticky.id === event.value.id ? event.value : sticky
-          )
-        );
-      }
-      if (event.type === NoteEvent.IndexUpdate) {
-        setIndexes((prev) =>
-        prev.map((index) =>
-        index.id === event.value.id ? event.value : index));
+      switch(event.type) {
+        case NoteEvent.Add:
+        case NoteEvent.Update:
+          setNotes(prev => {
+            const exists = prev.find(n => n.id === event.value.id);
+            if (exists) {
+              return prev.map(n => n.id === event.value.id ? event.value : n);
+            } else {
+              return [...prev, event.value];
+            }
+          });
+          break;
+        case NoteEvent.StickyUpdate:
+          setStickies(prev => {
+            const exists = prev.find(s => s.id === event.value.id);
+            if (exists) {
+              return prev.map(s => s.id === event.value.id ? event.value : s);
+            } else {
+              return [...prev, event.value];
+            }
+          });
+          break;
+        case NoteEvent.IndexUpdate:
+          setIndexes(prev => {
+            const exists = prev.find(i => i.id === event.value.id);
+            if (exists) {
+              return prev.map(i => i.id === event.value.id ? event.value : i);
+            } else {
+              return [...prev, event.value];
+            }
+          });
+          break;
+        default:
+          break;
       }
     };
-    NotesNotifier.addHandler(handleEvent);
 
-    return () => {
-      NotesNotifier.removeHandler(handleEvent);
-    };
+    NotesNotifier.addHandler(handleEvent);
+    return () => NotesNotifier.removeHandler(handleEvent);
   }, []);
 
     useEffect(() => {
@@ -136,11 +149,20 @@ export function Notes({ authState, userName}) {
     useEffect(() => {
       const params = new URLSearchParams(window.location.search);
       const notebookFromUrl = params.get("notebook");
+      const nbId = notebookFromUrl ? Number(notebookFromUrl) : null;
 
-      if (notebookFromUrl) {
-        setSelectedNotebookId(Number(notebookFromUrl));
+      if (nbId) {
+        setSelectedNotebookId(nbId);
+        loadNotes(nbId);
+        loadStickies(nbId);
+        loadIndexes(nbId);
+      } else if (notebooks.length > 0) {
+        setSelectedNotebookId(notebooks[0].id);
+        loadNotes(notebooks[0].id);
+        loadStickies(notebooks[0].id);
+        loadIndexes(notebooks[0].id);
       }
-    }, []);
+    }, [notebooks]);
 
     useEffect(() => {
       if (authState === AuthState.Authenticated && selectedNotebookId) {
@@ -179,6 +201,12 @@ export function Notes({ authState, userName}) {
       };
     }, [selectedNotebookId]);
 
+    useEffect(() => {
+      if (notebooks.length > 0 && !selectedNotebookId) {
+        setSelectedNotebookId(notebooks[0].id);
+      }
+    }, [notebooks]);
+
     //functions
 
     function addNote() {
@@ -200,6 +228,17 @@ export function Notes({ authState, userName}) {
       setTitle("");
       setText("");
       addNotification(`📝 Note added to Notebook`);
+
+      if (socket) {
+        socket.send(JSON.stringify({
+          type: "update",
+          notebookId: selectedNotebookId,
+          event: NoteEvent.Add,
+          value: newNote
+        }));
+      }
+
+      NotesNotifier.broadcastEvent("user", NoteEvent.Add, newNote);
     }
 
     function addSticky() {
@@ -215,6 +254,17 @@ export function Notes({ authState, userName}) {
       };
 
       setStickies([...stickies, newSticky]);
+
+      if (socket) {
+        socket.send(JSON.stringify({
+          type: "update",
+          notebookId: selectedNotebookId,
+          event: NoteEvent.StickyUpdate,
+          value: newSticky
+        }));
+      }
+
+      NotesNotifier.broadcastEvent("user", NoteEvent.StickyUpdate, newSticky);
       setSelectedStickyId(newSticky.id);
     }
 
@@ -230,13 +280,21 @@ export function Notes({ authState, userName}) {
         text: ""
       };
 
-      setIndexes([...indexes, newIndex]);
+      if (socket) {
+        socket.send(JSON.stringify({
+          type: "update",
+          notebookId: selectedNotebookId,
+          event: NoteEvent.IndexUpdate,
+          value: newIndex
+        }));
+      }
+
+      NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, newIndex);
       setSelectedIndexId(newIndex.id);
     }
 
     function updatedNoteText(value) {
       if (!selectedNote) return;
-
       const updatedNote = { ...selectedNote, text: value };
 
       const updated = notes.map(note =>
@@ -252,6 +310,7 @@ export function Notes({ authState, userName}) {
     }
 
     function updateStickyText(value) {
+      if (!selectedSticky) return;
       const updatedSticky = { ...selectedSticky, text: value };
 
       const updated = stickies.map(sticky =>
@@ -268,7 +327,8 @@ export function Notes({ authState, userName}) {
     }
 
   function updateIndexText(value){
-    const updatedIndex = {...selectedIndex, text: value};
+    if (!selectedIndex) return;
+    const updatedIndex = { ... selectedIndex, text: value };
     const updated = indexes.map(index =>
       index.id === selectedIndexId ? updatedIndex : index
     );
@@ -279,7 +339,6 @@ export function Notes({ authState, userName}) {
     setIndexes(updated);
     NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
   }
-
 
     function addNotification(message) {
       const newNotification = {
@@ -341,21 +400,15 @@ export function Notes({ authState, userName}) {
       addNotification("🔗 Share link copied!");
     }
 
-    async function loadNotes() {
-      if (!selectedNotebookId) return;
+    async function loadNotes(notebookId) {
+      if (!notebookId) return;
       try {
-        const res = await fetch(`/api/notes?notebookId=${selectedNotebookId}`, {
-          credentials: "include"
-        });
+        const res = await fetch(`/api/notes?notebookId=${notebookId}`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
           setNotes(data);
-        } else {
-          console.error("Failed to fetch notes", res.status);
         }
-      } catch (err) {
-        console.error(err);
-      }
+      } catch(err) { console.error(err); }
     }
 
     async function saveNoteBackend(note) {
@@ -376,6 +429,26 @@ export function Notes({ authState, userName}) {
       } catch (err) {
         console.error(err);
       }
+    }
+
+    async function loadStickies(notebookId) {
+      try {
+        const res = await fetch(`/api/stickies?notebookId=${notebookId}`, { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          setStickies(data);
+        }
+      } catch(err) { console.error(err); }
+    }
+
+    async function loadIndexes(notebookId) {
+      try {
+        const res = await fetch(`/api/indexes?notebookId=${notebookId}`, { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          setIndexes(data);
+        }
+      } catch(err) { console.error(err); }
     }
 
     const filteredIndexes = indexes.filter(
@@ -450,7 +523,7 @@ export function Notes({ authState, userName}) {
                 <h2>{note.title}</h2>
 
                 {selectedNoteId === note.id ? (
-                  <textarea value={note.text || ""} onChange={(e) => updatedNoteText(e.target.value)} onBlur={() => setSelectedNoteId(null)} placeholder="Type your text here..." rows={20} cols={60} autoFocus/>
+                  <textarea value={note.text || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder="Type your text here..." rows={20} cols={60}/>
                 ) : (
                   <p>{note.text || "Click to edit..."}</p>
                 )}
