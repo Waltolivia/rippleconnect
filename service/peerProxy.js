@@ -13,23 +13,48 @@ function peerProxy(httpServer) {
     }
   });
 
-  wss.on('connection', (ws) => {
-    console.log('WebSocket connected'); // connection confirmation
+    const rooms = {};
+
+    wss.on('connection', (ws) => {
+    console.log('WebSocket connected');
 
     ws.on('message', (message) => {
-      console.log('Received:', message.toString());
+        const data = JSON.parse(message.toString());
 
-      wss.clients.forEach((client) => {
-        if (client.readyState === 1) {
-          client.send(message.toString());
+        if (data.type === 'join') {
+        const { notebookId } = data;
+
+        if (!rooms[notebookId]) {
+            rooms[notebookId] = new Set();
         }
-      });
+
+        rooms[notebookId].add(ws);
+        ws.notebookId = notebookId;
+
+        console.log(`User joined notebook ${notebookId}`);
+        }
+
+        if (data.type === 'update') {
+        const room = rooms[ws.notebookId]; // same notebook updates
+
+        if (room) {
+            room.forEach((client) => {
+            if (client !== ws && client.readyState === 1) {
+                client.send(JSON.stringify(data));
+            }
+            });
+        }
+        }
     });
 
     ws.on('close', () => {
-      console.log('WebSocket disconnected'); // disconnection
+        const room = rooms[ws.notebookId];
+        if (room) {
+        room.delete(ws);
+        }
+        console.log('WebSocket disconnected');
     });
-  });
+    });
 
   return wss;
 }

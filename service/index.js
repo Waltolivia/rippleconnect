@@ -102,12 +102,6 @@ apiRouter.post('/notes', verifyAuth, async(req, res) => {
       type: 'noteUpdate',
       note: newNote
     });
-
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) {
-        client.send(message);
-      }
-    });
   }
 
   const updatedNotes = await db.collection('notes').find({ userId: user.email }).toArray();

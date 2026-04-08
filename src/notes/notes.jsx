@@ -37,6 +37,7 @@ export function Notes({ authState, userName}) {
   const selectedIndex = indexes.find(i => i.id === selectedIndexId);
   const [notifications, setNotifications] = useState([]);
   const [editingNotebookId, setEditingNotebookId] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   // Use Effects
 
@@ -131,6 +132,37 @@ export function Notes({ authState, userName}) {
         loadNotes();
       }
     }, [authState]);
+
+    useEffect(() => {
+    if (!selectedNotebookId) return;
+
+    const ws = new WebSocket(`ws://${window.location.host}/ws`);
+
+    ws.onopen = () => {
+      ws.send(JSON.stringify({
+        type: "join",
+        notebookId: selectedNotebookId
+      }));
+    };
+
+    ws.onmessage = (msg) => {
+      const data = JSON.parse(msg.data);
+
+      if (data.type === "update") {
+        NotesNotifier.broadcastEvent(
+          "remote",
+          data.event,
+          data.value
+        );
+      }
+    };
+
+    setSocket(ws);
+
+    return () => {
+      ws.close();
+    };
+  }, [selectedNotebookId]);
 
     //functions
 
