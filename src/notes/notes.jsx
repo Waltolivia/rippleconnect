@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
 import {NavLink} from 'react-router-dom';
 import { NotesNotifier, NoteEvent } from "./notesNotifier";
 import { AuthState } from "../authState";
+import React, { useState, useEffect, useRef } from "react";
 
 /* sign in testing:
 user 1: helo@hello.com  hello
@@ -44,6 +44,14 @@ export function Notes({ authState, userName}) {
   const [notifications, setNotifications] = useState([]);
   const [editingNotebookId, setEditingNotebookId] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [editingTexts, setEditingTexts] = useState({
+    notes: {},   // noteId -> text
+    stickies: {}, // stickyId -> text
+    indexes: {}  // indexId -> text
+  });
+  const noteRef = useRef(null);
+  const stickyRef = useRef(null);
+  const indexRef = useRef(null);
 
   // Use Effects
 
@@ -75,7 +83,24 @@ export function Notes({ authState, userName}) {
           setNotes(prev => {
             const exists = prev.find(n => n.id === event.value.id);
             if (exists) {
-              return prev.map(n => n.id === event.value.id ? event.value : n);
+              const updatedNotes = prev.map(n => n.id === event.value.id ? event.value : n);
+
+              if (selectedNoteId === event.value.id) {
+                setEditingTexts(prev => ({
+                  ...prev,
+                  notes: event.type === NoteEvent.Add || event.type === NoteEvent.Update
+                    ? { ...prev.notes, [event.value.id]: prev.notes[event.value.id] ?? event.value.text }
+                    : prev.notes,
+                  stickies: event.type === NoteEvent.StickyUpdate
+                    ? { ...prev.stickies, [event.value.id]: prev.stickies[event.value.id] ?? event.value.text }
+                    : prev.stickies,
+                  indexes: event.type === NoteEvent.IndexUpdate
+                    ? { ...prev.indexes, [event.value.id]: prev.indexes[event.value.id] ?? event.value.text }
+                    : prev.indexes
+                }));
+              }
+
+              return updatedNotes;
             } else {
               return [...prev, event.value];
             }
@@ -85,7 +110,22 @@ export function Notes({ authState, userName}) {
           setStickies(prev => {
             const exists = prev.find(s => s.id === event.value.id);
             if (exists) {
-              return prev.map(s => s.id === event.value.id ? event.value : s);
+              const updatedStickies = prev.map(s => s.id === event.value.id ? event.value : s);
+              if (selectedStickyId === event.value.id) {
+                setEditingTexts(prev => ({
+                  ...prev,
+                  notes: event.type === NoteEvent.Add || event.type === NoteEvent.Update
+                    ? { ...prev.notes, [event.value.id]: prev.notes[event.value.id] ?? event.value.text }
+                    : prev.notes,
+                  stickies: event.type === NoteEvent.StickyUpdate
+                    ? { ...prev.stickies, [event.value.id]: prev.stickies[event.value.id] ?? event.value.text }
+                    : prev.stickies,
+                  indexes: event.type === NoteEvent.IndexUpdate
+                    ? { ...prev.indexes, [event.value.id]: prev.indexes[event.value.id] ?? event.value.text }
+                    : prev.indexes
+                }));
+              }
+              return updatedStickies;
             } else {
               return [...prev, event.value];
             }
@@ -95,7 +135,22 @@ export function Notes({ authState, userName}) {
           setIndexes(prev => {
             const exists = prev.find(i => i.id === event.value.id);
             if (exists) {
-              return prev.map(i => i.id === event.value.id ? event.value : i);
+              const updatedIndexes = prev.map(i => i.id === event.value.id ? event.value : i);
+              if (selectedIndexId === event.value.id) {
+                setEditingTexts(prev => ({
+                  ...prev,
+                  notes: event.type === NoteEvent.Add || event.type === NoteEvent.Update
+                    ? { ...prev.notes, [event.value.id]: prev.notes[event.value.id] ?? event.value.text }
+                    : prev.notes,
+                  stickies: event.type === NoteEvent.StickyUpdate
+                    ? { ...prev.stickies, [event.value.id]: prev.stickies[event.value.id] ?? event.value.text }
+                    : prev.stickies,
+                  indexes: event.type === NoteEvent.IndexUpdate
+                    ? { ...prev.indexes, [event.value.id]: prev.indexes[event.value.id] ?? event.value.text }
+                    : prev.indexes
+                }));
+              }
+              return updatedIndexes;
             } else {
               return [...prev, event.value];
             }
@@ -108,7 +163,7 @@ export function Notes({ authState, userName}) {
 
     NotesNotifier.addHandler(handleEvent);
     return () => NotesNotifier.removeHandler(handleEvent);
-  }, []);
+  }, [selectedNoteId, selectedStickyId, selectedIndexId]);
 
     useEffect(() => {
       const joinTimer = setTimeout(() => {
@@ -206,6 +261,45 @@ export function Notes({ authState, userName}) {
         setSelectedNotebookId(notebooks[0].id);
       }
     }, [notebooks]);
+
+    useEffect(() => {
+      if (noteRef.current) noteRef.current.focus();
+    }, [selectedNoteId]);
+
+    useEffect(() => {
+      if (stickyRef.current) stickyRef.current.focus();
+    }, [selectedStickyId]);
+
+    useEffect(() => {
+      if (indexRef.current) indexRef.current.focus();
+    }, [selectedIndexId]);
+
+    useEffect(() => {
+      if (selectedNote) {
+        setEditingTexts(prev => ({
+          ...prev,
+          notes: { ...prev.notes, [selectedNote.id]: selectedNote.text || "" }
+        }));
+      }
+    }, [selectedNoteId, selectedNote]);
+
+    useEffect(() => {
+      if (selectedSticky) {
+        setEditingTexts(prev => ({
+          ...prev,
+          stickies: { ...prev.stickies, [selectedSticky.id]: selectedSticky.text || "" }
+        }));
+      }
+    }, [selectedStickyId, selectedSticky]);
+
+    useEffect(() => {
+      if (selectedIndex) {
+        setEditingTexts(prev => ({
+          ...prev,
+          indexes: { ...prev.indexes, [selectedIndex.id]: selectedIndex.text || "" }
+        }));
+      }
+    }, [selectedIndexId, selectedIndex]);
 
     //functions
 
@@ -523,7 +617,21 @@ export function Notes({ authState, userName}) {
                 <h2>{note.title}</h2>
 
                 {selectedNoteId === note.id ? (
-                  <textarea value={note.text || ""} onChange={(e) => updatedNoteText(e.target.value)} placeholder="Type your text here..." rows={20} cols={60}/>
+                  <textarea
+                    ref={noteRef}
+                    value={editingTexts.notes[note.id] ?? note.text}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEditingTexts(prev => ({
+                        ...prev,
+                        notes: { ...prev.notes, [note.id]: val }
+                      }));
+                      updatedNoteText(val);
+                    }}
+                    placeholder="Type your text here..."
+                    rows={20}
+                    cols={60}
+                  />
                 ) : (
                   <p>{note.text || "Click to edit..."}</p>
                 )}
@@ -538,9 +646,16 @@ export function Notes({ authState, userName}) {
                 <div key={sticky.id} className="sticky-note" onClick={() => setSelectedStickyId(sticky.id)}>
                   {selectedStickyId === sticky.id ? (
                     <textarea
-                      value={sticky.text || ""}
-                      onChange={(e) => updateStickyText(e.target.value)}
-                      onBlur={() => setSelectedStickyId(null)}
+                      ref={stickyRef}  
+                      value={editingTexts.stickies[sticky.id] ?? sticky.text}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEditingTexts(prev => ({
+                          ...prev,
+                          stickies: { ...prev.stickies, [sticky.id]: val }
+                        }));
+                        updateStickyText(val);
+                      }}
                       placeholder="Type your note here..."
                       rows={5}
                       cols={20}
@@ -559,19 +674,26 @@ export function Notes({ authState, userName}) {
               {filteredIndexes.map(index => (
                 <div key={index.id} className="Index-note" onClick={() => setSelectedIndexId(index.id)}>
                   <img src="/starryexampleimg.png" alt="Blue Links" width="250" />
-                  {selectedIndexId === index.id ? (
-                    <textarea
-                      value={index.text || ""}
-                      onChange={(e) => updateIndexText(e.target.value)}
-                      onBlur={() => setSelectedIndexId(null)}
-                      placeholder="Type your notes here..."
-                      rows={5}
-                      cols={15}
-                      autoFocus
-                    />
-                  ) : (
-                    <p>{index.text || "Click to edit..."}</p>
-                  )}
+                    {selectedIndexId === index.id ? (
+                      <textarea
+                        ref={indexRef}  
+                        value={editingTexts.indexes[index.id] ?? index.text}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditingTexts(prev => ({
+                            ...prev,
+                            indexes: { ...prev.indexes, [index.id]: val }
+                          }));
+                          updateIndexText(val);
+                        }}
+                        placeholder="Type your notes here..."
+                        rows={5}
+                        cols={15}
+                        autoFocus
+                      />
+                    ) : (
+                      <p>{index.text || "Click to edit..."}</p>
+                    )}
                 </div>
               ))}
             </div>
