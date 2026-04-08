@@ -166,16 +166,6 @@ export function Notes({ authState, userName}) {
   }, [selectedNoteId, selectedStickyId, selectedIndexId]);
 
     useEffect(() => {
-      const joinTimer = setTimeout(() => {
-        addNotification("🟢 Alex joined the workspace");
-      }, 8000);
-
-      return () => {
-        clearTimeout(joinTimer);
-      };
-    }, []);
-
-    useEffect(() => {
       if (selectedNotebookId !== null) {
         localStorage.setItem("selectedNotebookId", selectedNotebookId);
       }
@@ -225,36 +215,6 @@ export function Notes({ authState, userName}) {
       }
     }, [selectedNotebookId, authState]);
 
-    useEffect(() => {
-      if (!selectedNotebookId) return;
-
-      const ws = new WebSocket(`ws://${window.location.host}/ws`);
-
-      ws.onopen = () => {
-        ws.send(JSON.stringify({
-          type: "join",
-          notebookId: selectedNotebookId
-        }));
-      };
-
-      ws.onmessage = (msg) => {
-        const data = JSON.parse(msg.data);
-
-        if (data.type === "update") {
-          NotesNotifier.broadcastEvent(
-            "remote",
-            data.event,
-            data.value
-          );
-        }
-      };
-
-      setSocket(ws);
-
-      return () => {
-        ws.close();
-      };
-    }, [selectedNotebookId]);
 
     useEffect(() => {
       if (notebooks.length > 0 && !selectedNotebookId) {
@@ -300,6 +260,46 @@ export function Notes({ authState, userName}) {
         }));
       }
     }, [selectedIndexId, selectedIndex]);
+
+    useEffect(() => { // one useeffect for connection notifications
+      if (!selectedNotebookId || !userName) return;
+
+      const ws = new WebSocket(`ws://${window.location.host}/ws`);
+      setSocket(ws);
+
+      ws.onopen = () => {
+        console.log('WebSocket connected');
+        ws.send(JSON.stringify({ type: 'join', notebookId: selectedNotebookId, userName }));
+      };
+
+      ws.onmessage = (msg) => {
+        const data = JSON.parse(msg.data);
+
+        if (data.type === 'initial' && data.notebookId === selectedNotebookId) {
+          setNotes(data.notes);
+        }
+
+        if (data.type === 'update' && data.notebookId === selectedNotebookId) {
+          setNotes(prev => {
+            const exists = prev.find(n => n.id === data.note.id);
+            if (exists) {
+              return prev.map(n => n.id === data.note.id ? data.note : n);
+            } else {
+              return [...prev, data.note];
+            }
+          });
+        }
+
+        if (data.type === 'user-joined' && data.notebookId === selectedNotebookId) {
+          addNotification(`🟢 ${data.userName} joined the workspace`);
+        }
+      };
+
+      ws.onclose = () => console.log('WS disconnected');
+      ws.onerror = (err) => console.error('WS error', err);
+
+      return () => ws.close();
+    }, [selectedNotebookId, userName]);
 
     //functions
 

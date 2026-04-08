@@ -149,7 +149,7 @@ async function start() {
     console.log(`Listening on port ${port}`);
   });
 
-  wss = peerProxy(httpService);
+  wss = peerProxy(httpService, db);
 }
 
 start();
