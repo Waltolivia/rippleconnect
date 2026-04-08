@@ -3,6 +3,12 @@ import {NavLink} from 'react-router-dom';
 import { NotesNotifier, NoteEvent } from "./notesNotifier";
 import { AuthState } from "../authState";
 
+/* sign in testing:
+user 1: helo@hello.com  hello
+user 2 stargirl@stargirl.com  stargirl
+*/
+
+
 
 export function Notes({ authState, userName}) {
     const [notes, setNotes] = useState(() => {
@@ -128,47 +134,50 @@ export function Notes({ authState, userName}) {
     }, [notes, stickies, indexes, notebooks, selectedNotebookId]);
 
     useEffect(() => {
-      if (authState === AuthState.Authenticated) {
-        loadNotes();
-      }
-    }, [authState]);
+      const params = new URLSearchParams(window.location.search);
+      const notebookFromUrl = params.get("notebook");
 
-    useEffect(() => {
-      if (!selectedNotebookId) return;
+      if (notebookFromUrl) {
+        setSelectedNotebookId(Number(notebookFromUrl));
+      }
+    }, []);
 
     useEffect(() => {
       if (authState === AuthState.Authenticated && selectedNotebookId) {
         loadNotes();
       }
+    }, [selectedNotebookId, authState]);
+
+    useEffect(() => {
+      if (!selectedNotebookId) return;
+
+      const ws = new WebSocket(`ws://${window.location.host}/ws`);
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({
+          type: "join",
+          notebookId: selectedNotebookId
+        }));
+      };
+
+      ws.onmessage = (msg) => {
+        const data = JSON.parse(msg.data);
+
+        if (data.type === "update") {
+          NotesNotifier.broadcastEvent(
+            "remote",
+            data.event,
+            data.value
+          );
+        }
+      };
+
+      setSocket(ws);
+
+      return () => {
+        ws.close();
+      };
     }, [selectedNotebookId]);
-
-    const ws = new WebSocket(`ws://${window.location.host}/ws`);
-
-    ws.onopen = () => {
-      ws.send(JSON.stringify({
-        type: "join",
-        notebookId: selectedNotebookId
-      }));
-    };
-
-    ws.onmessage = (msg) => {
-      const data = JSON.parse(msg.data);
-
-      if (data.type === "update") {
-        NotesNotifier.broadcastEvent(
-          "remote",
-          data.event,
-          data.value
-        );
-      }
-    };
-
-    setSocket(ws);
-
-    return () => {
-      ws.close();
-    };
-  }, [selectedNotebookId]);
 
     //functions
 
@@ -235,12 +244,7 @@ export function Notes({ authState, userName}) {
       );
 
       if (socket) {
-        socket.send(JSON.stringify({
-          type: "update",
-          notebookId: selectedNotebookId,
-          event: NoteEvent.Update,
-          value: updatedNote
-        }));
+        socket.send(JSON.stringify({type: "update", notebookId: selectedNotebookId, event: NoteEvent.Update, value: updatedNote}));
       }
 
       setNotes(updated);
@@ -255,12 +259,7 @@ export function Notes({ authState, userName}) {
       );
 
       if (socket) {
-        socket.send(JSON.stringify({
-          type: "update",
-          notebookId: selectedNotebookId,
-          event: StickyEvent.Update,
-          value: updatedSticky
-        }));
+        socket.send(JSON.stringify({ type: "update", notebookId: selectedNotebookId, event: NoteEvent.StickyUpdate, value: updatedSticky}));
       }
 
       setStickies(updated);
@@ -275,12 +274,7 @@ export function Notes({ authState, userName}) {
     );
 
     if (socket) {
-      socket.send(JSON.stringify({
-        type: "update",
-        notebookId: selectedNotebookId,
-        event: InvEvent.Update,
-        value: updatedIndex
-      }));
+      socket.send(JSON.stringify({type: "update", notebookId: selectedNotebookId, event: NoteEvent.IndexUpdate, value: updatedIndex}));
     }
     setIndexes(updated);
     NotesNotifier.broadcastEvent("user", NoteEvent.IndexUpdate, updatedIndex);
@@ -333,6 +327,18 @@ export function Notes({ authState, userName}) {
       }
 
       addNotification("🗑️ Notebook deleted");
+    }
+
+    function shareNotebook() {
+      if (!selectedNotebookId) {
+        alert("Select a notebook first");
+        return;
+      }
+
+      const url = `${window.location.origin}/notes?notebook=${selectedNotebookId}`;
+
+      navigator.clipboard.writeText(url);
+      addNotification("🔗 Share link copied!");
     }
 
     async function loadNotes() {
