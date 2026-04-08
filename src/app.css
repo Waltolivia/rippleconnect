@@ -178,7 +178,7 @@ header .bar-item-button {
     margin-bottom: 1rem; 
     padding: 1rem;
     border-radius: 0.5rem;
-    color: #ffffff;
+    color: rgb(248, 232, 225);
 }
 
 .note, .sticky-note, .Index-note {

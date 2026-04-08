@@ -368,8 +368,8 @@ export function Notes({ authState, userName}) {
 
         <div className="main-content">
           <div className="notes-instructions">
-            <h3>Welcome to the Notebooks!</h3>
-            <p>Use the buttons to add Notes, Sticky Notes, and Index Cards to help you take notes. Everything is saved to its notebook so feel free to come back anytime. </p>
+            <h1>Welcome to the Notebooks!</h1>
+            <p>Use the buttons to add Notes, Sticky Notes, and Index Cards to help you take notes. Everything is saved to its notebook so feel free to come back anytime. Notebooks can be shared with friends so you can work as a team!</p>
           </div>
           
           <div className="content-notes">
